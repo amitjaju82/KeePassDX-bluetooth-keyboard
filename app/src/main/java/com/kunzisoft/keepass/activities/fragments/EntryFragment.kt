@@ -37,18 +37,23 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.kunzisoft.keepass.R
 import com.kunzisoft.keepass.adapters.EntryAttachmentsItemsAdapter
 import com.kunzisoft.keepass.database.ContextualDatabase
+import com.kunzisoft.keepass.hid.BluetoothHidManager
+import com.kunzisoft.keepass.hid.HidPayloadBuilder
 import com.kunzisoft.keepass.model.EntryInfo
 import com.kunzisoft.keepass.model.FieldProtection
 import com.kunzisoft.keepass.model.StreamDirection
 import com.kunzisoft.keepass.settings.PreferencesUtil
 import com.kunzisoft.keepass.utils.TimeUtil.getDateTimeString
+import com.google.android.material.snackbar.Snackbar
 import com.kunzisoft.keepass.view.TemplateView
+import com.kunzisoft.keepass.view.asError
 import com.kunzisoft.keepass.view.collapse
 import com.kunzisoft.keepass.view.expand
 import com.kunzisoft.keepass.view.hideByFading
 import com.kunzisoft.keepass.view.showByFading
 import com.kunzisoft.keepass.viewmodels.AttachmentsViewModel
 import com.kunzisoft.keepass.viewmodels.EntryViewModel
+import net.tjado.bluetooth.BluetoothDeviceListing
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -104,9 +109,13 @@ class EntryFragment: DatabaseFragment() {
             onChangeFieldProtectionClickListener = mEntryViewModel::requestChangeFieldProtection
             onAskCopySafeClickListener = ::showClipboardDialog
             onCopyActionClickListener = mEntryViewModel::requestCopyField
+            // Type a field into the computer paired over Bluetooth
+            onSendActionClickListener = ::sendFieldToPairedComputer
             // OTP timer updated
             onOtpUpdatedListener = mEntryViewModel::onOtpElementUpdated
         }
+
+        observeBluetoothHidResults()
 
         attachmentsContainerView = view.findViewById(R.id.entry_attachments_container)
         attachmentsListView = view.findViewById(R.id.entry_attachments_list)
@@ -204,6 +213,7 @@ class EntryFragment: DatabaseFragment() {
             onChangeFieldProtectionClickListener = null
             onAskCopySafeClickListener = null
             onCopyActionClickListener = null
+            onSendActionClickListener = null
             onOtpUpdatedListener = null
         }
         attachmentsAdapter?.apply {
@@ -238,6 +248,117 @@ class EntryFragment: DatabaseFragment() {
 
     fun updateField(field: FieldProtection) {
         templateView.setFieldProtection(field)
+    }
+
+    /**
+     * Type a field into the computer paired over Bluetooth, as if from a keyboard.
+     *
+     * Runs alongside the clipboard and Magikeyboard paths without altering either.
+     */
+    private fun sendFieldToPairedComputer(fieldProtection: FieldProtection) {
+        val context = context ?: return
+
+        val listing = try {
+            BluetoothDeviceListing(context)
+        } catch (e: Exception) {
+            showBluetoothMessage(getString(R.string.bluetooth_hid_error_unavailable), isError = true)
+            return
+        }
+
+        val candidates = try {
+            listing.availableDevices
+        } catch (e: SecurityException) {
+            emptyList()
+        }
+
+        if (candidates.isEmpty()) {
+            showBluetoothMessage(getString(R.string.bluetooth_hid_error_no_device), isError = true)
+            return
+        }
+
+        // Build the keystrokes before asking, so an unmappable value fails before the user
+        // has picked a computer.
+        val payload = HidPayloadBuilder.build(
+            context,
+            fieldProtection.field.protectedValue.charArrayValue
+        )
+        if (payload is HidPayloadBuilder.Result.Unmappable) {
+            showBluetoothMessage(
+                resources.getQuantityString(
+                    R.plurals.bluetooth_hid_error_unmapped,
+                    payload.count,
+                    payload.count
+                ),
+                isError = true
+            )
+            return
+        }
+        val scancodes = (payload as HidPayloadBuilder.Result.Ready).scancodes
+
+        // Always ask which computer to type into: the phone may be paired with several, and
+        // typing a credential into the wrong one is not recoverable.
+        val defaultDevice = try {
+            listing.hidDefaultDevice
+        } catch (e: Exception) {
+            null
+        }
+        val ordered = candidates.sortedByDescending { it.address == defaultDevice?.address }
+        val labels = ordered.map { device ->
+            val name = device.name ?: device.address
+            if (device.address == defaultDevice?.address) {
+                getString(R.string.bluetooth_hid_device_default, name)
+            } else {
+                name
+            }
+        }.toTypedArray<CharSequence>()
+
+        AlertDialog.Builder(context)
+            .setTitle(R.string.bluetooth_hid_choose_computer)
+            .setItems(labels) { _, which ->
+                templateView.setSendInProgress(true)
+                BluetoothHidManager.send(context, ordered[which].device, scancodes)
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                scancodes.fill(0)
+            }
+            .setOnCancelListener { scancodes.fill(0) }
+            .show()
+    }
+
+    private fun observeBluetoothHidResults() {
+        BluetoothHidManager.lastSendResult.observe(viewLifecycleOwner) { result ->
+            if (result == null) return@observe
+            templateView.setSendInProgress(false)
+
+            val message = when (result.status) {
+                BluetoothHidManager.SendStatus.SENT -> null
+                BluetoothHidManager.SendStatus.NO_DEVICE_SELECTED ->
+                    getString(R.string.bluetooth_hid_error_no_device)
+                BluetoothHidManager.SendStatus.NOT_CONNECTED ->
+                    getString(R.string.bluetooth_hid_error_not_connected)
+                BluetoothHidManager.SendStatus.CONNECT_TIMEOUT ->
+                    getString(R.string.bluetooth_hid_error_connect_timeout)
+                BluetoothHidManager.SendStatus.REFUSED_BY_STACK ->
+                    getString(R.string.bluetooth_hid_error_refused)
+                BluetoothHidManager.SendStatus.PROFILE_UNAVAILABLE ->
+                    getString(R.string.bluetooth_hid_error_unavailable)
+                BluetoothHidManager.SendStatus.UNMAPPED_CHARACTERS ->
+                    resources.getQuantityString(
+                        R.plurals.bluetooth_hid_error_unmapped,
+                        result.unmappedCount,
+                        result.unmappedCount
+                    )
+            }
+            message?.let { showBluetoothMessage(it, isError = true) }
+            BluetoothHidManager.consumeResult()
+        }
+    }
+
+    private fun showBluetoothMessage(message: String, isError: Boolean) {
+        val anchor = view ?: return
+        Snackbar.make(anchor, message, Snackbar.LENGTH_LONG).apply {
+            if (isError) asError()
+        }.show()
     }
 
     private fun showClipboardDialog() {

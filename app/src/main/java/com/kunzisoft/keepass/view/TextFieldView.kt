@@ -52,6 +52,7 @@ open class TextFieldView @JvmOverloads constructor(
     protected var containerViewId = ViewCompat.generateViewId()
     protected var showButtonId = ViewCompat.generateViewId()
     protected var copyButtonId = ViewCompat.generateViewId()
+    protected var sendButtonId = ViewCompat.generateViewId()
 
     protected val labelView = AppCompatTextView(context).apply {
         setTextAppearance(context,
@@ -135,9 +136,20 @@ open class TextFieldView @JvmOverloads constructor(
         setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_content_copy_white_24dp))
         contentDescription = context.getString(R.string.menu_copy)
     }
+    private var sendButton = AppCompatImageButton(
+        ContextThemeWrapper(context, R.style.KeepassDXStyle_ImageButton_Simple), null, 0).apply {
+        layoutParams = LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT)
+        setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_bluetooth_send_white_24dp))
+        contentDescription = context.getString(R.string.bluetooth_hid_title)
+        // Hidden unless the Bluetooth keyboard feature is switched on.
+        visibility = GONE
+    }
 
     init {
         buildViews()
+        addView(sendButton)
         addView(copyButton)
         addView(showButton)
         addView(containerView)
@@ -146,20 +158,49 @@ open class TextFieldView @JvmOverloads constructor(
     }
 
     private fun buildViews() {
-        copyButton.apply {
-            id = copyButtonId
+        sendButton.apply {
+            id = sendButtonId
             layoutParams = (layoutParams as LayoutParams?)?.also {
                 it.addRule(ALIGN_PARENT_RIGHT)
                 it.addRule(ALIGN_PARENT_END)
             }
         }
+        copyButton.apply {
+            id = copyButtonId
+            layoutParams = (layoutParams as LayoutParams?)?.also {
+                // Anchor to the send button only while it is actually shown, otherwise the
+                // copy button would hang off a GONE view.
+                if (sendButton.isVisible) {
+                    it.removeRule(ALIGN_PARENT_RIGHT)
+                    it.removeRule(ALIGN_PARENT_END)
+                    it.addRule(LEFT_OF, sendButtonId)
+                    it.addRule(START_OF, sendButtonId)
+                } else {
+                    it.removeRule(LEFT_OF)
+                    it.removeRule(START_OF)
+                    it.addRule(ALIGN_PARENT_RIGHT)
+                    it.addRule(ALIGN_PARENT_END)
+                }
+            }
+        }
         showButton.apply {
             id = showButtonId
             layoutParams = (layoutParams as LayoutParams?)?.also {
-                if (copyButton.isVisible) {
-                    it.addRule(LEFT_OF, copyButtonId)
-                    it.addRule(START_OF, copyButtonId)
+                // Anchor to whichever button to its right is actually shown, so the row
+                // stays correct for any combination of send/copy visibility.
+                val anchorId = when {
+                    copyButton.isVisible -> copyButtonId
+                    sendButton.isVisible -> sendButtonId
+                    else -> null
+                }
+                if (anchorId != null) {
+                    it.removeRule(ALIGN_PARENT_RIGHT)
+                    it.removeRule(ALIGN_PARENT_END)
+                    it.addRule(LEFT_OF, anchorId)
+                    it.addRule(START_OF, anchorId)
                 } else {
+                    it.removeRule(LEFT_OF)
+                    it.removeRule(START_OF)
                     it.addRule(ALIGN_PARENT_RIGHT)
                     it.addRule(ALIGN_PARENT_END)
                 }
@@ -375,6 +416,62 @@ open class TextFieldView @JvmOverloads constructor(
         copyButton.setOnClickListener(onActionClickListener)
         copyButton.isVisible = onActionClickListener != null
         invalidate()
+    }
+
+    /**
+     * Show or hide the "type this into the paired computer" button.
+     *
+     * A sibling of [setCopyButtonState]; the copy button and its behaviour are untouched.
+     */
+    fun setSendButtonState(buttonState: ButtonState) {
+        when (buttonState) {
+            ButtonState.ACTIVATE -> sendButton.apply {
+                visibility = VISIBLE
+                isEnabled = true
+                isActivated = false
+            }
+            ButtonState.DEACTIVATE -> sendButton.apply {
+                visibility = VISIBLE
+                // isActivated is reversed here for the same reason as the copy button: it
+                // drives the themed "unavailable" tint through @color/secondary_selector.
+                isEnabled = false
+                isActivated = true
+            }
+            ButtonState.GONE -> sendButton.apply {
+                visibility = GONE
+                setOnClickListener(null)
+            }
+        }
+        invalidate()
+    }
+
+    fun setSendButtonClickListener(onActionClickListener: ((fieldProtection: FieldProtection) -> Unit)?) {
+        val clickListener = if (onActionClickListener != null)
+            OnClickListener { onActionClickListener.invoke(
+                FieldProtection(
+                    field = Field(
+                        name = label,
+                        value = ProtectedString(
+                            enableProtection = isProtected,
+                            value = value
+                        )
+                    ),
+                    isRevealed = isRevealed(),
+                    needUserVerificationToReveal = needUserVerificationToReveal
+                )
+            ) }
+        else
+            null
+        sendButton.setOnClickListener(clickListener)
+        invalidate()
+    }
+
+    /** Dim the send button while a transmission is in flight. */
+    fun setSendButtonEnabled(enabled: Boolean) {
+        if (sendButton.isVisible) {
+            sendButton.isEnabled = enabled
+            sendButton.isActivated = !enabled
+        }
     }
 
     override var isFieldVisible: Boolean

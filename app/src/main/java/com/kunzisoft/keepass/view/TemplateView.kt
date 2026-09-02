@@ -32,8 +32,12 @@ class TemplateView @JvmOverloads constructor(
     var onCopyActionClickListener: ((FieldProtection) -> Unit)? = null
     var onOtpUpdatedListener: ((OtpElement?) -> Unit)? = null
 
+    /** Type a field into the computer paired over Bluetooth. Sibling of the copy action. */
+    var onSendActionClickListener: ((FieldProtection) -> Unit)? = null
+
     private var firstTimeAskAllowCopyProtectedFields: Boolean = false
     private var allowCopyProtectedFields: Boolean = false
+    private var bluetoothHidEnabled: Boolean = false
 
     init {
         loadPreferences()
@@ -42,6 +46,20 @@ class TemplateView @JvmOverloads constructor(
     private fun loadPreferences() {
         firstTimeAskAllowCopyProtectedFields = PreferencesUtil.isFirstTimeAskAllowCopyProtectedFields(context)
         allowCopyProtectedFields = PreferencesUtil.allowCopyProtectedFields(context)
+        // Independent of allowCopyProtectedFields: typing into a paired computer is a
+        // different channel from the shared system clipboard, and it has its own opt-in
+        // (the feature toggle plus an explicitly paired computer).
+        bluetoothHidEnabled = PreferencesUtil.isBluetoothHidEnabled(context)
+    }
+
+    /**
+     * Enable or dim every send button at once. There is a single Bluetooth HID link, so two
+     * concurrent sends would interleave their keystrokes.
+     */
+    fun setSendInProgress(inProgress: Boolean) {
+        mFields.values.filterIsInstance<TextFieldView>().forEach {
+            it.setSendButtonEnabled(!inProgress)
+        }
     }
 
     override fun preProcessTemplate() {
@@ -117,6 +135,21 @@ class TemplateView @JvmOverloads constructor(
                         onCopyActionClickListener?.invoke(fieldProtection)
                     }
                 }
+
+                // Send button, on every field rather than the password alone. For an OTP row
+                // this transmits the generated token, because OtpTextFieldView overrides
+                // `value` to return the token rather than the otpauth:// URI that holds the
+                // shared secret.
+                if (bluetoothHidEnabled) {
+                    setSendButtonState(TextFieldView.ButtonState.ACTIVATE)
+                    setSendButtonClickListener { fieldProtection ->
+                        onSendActionClickListener?.invoke(fieldProtection)
+                    }
+                } else {
+                    setSendButtonState(TextFieldView.ButtonState.GONE)
+                    setSendButtonClickListener(null)
+                }
+
                 mFields[field.name] = this
             }
         }

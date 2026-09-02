@@ -57,6 +57,14 @@ entry field ──▶ scancodes for the chosen layout ──▶ HID reports ─�
   refused with a count rather than typing a partial password
 - Everything else in KeePassDX — clipboard, Magikeyboard, Autofill — is **untouched**
 
+## Documentation for everything else
+
+This README covers the Bluetooth keyboard feature only. Everything else — opening and syncing
+database files, Magikeyboard, Autofill, OTP, hardware keys — behaves exactly as upstream, and
+the [KeePassDX wiki](https://github.com/Kunzisoft/KeePassDX/wiki) is the reference for it. In
+particular, [File Manager and Sync](https://github.com/Kunzisoft/KeePassDX/wiki/File-Manager-and-Sync)
+explains how database files are opened and kept in sync.
+
 ## Requirements
 
 - Android **9 (API 28)** or newer

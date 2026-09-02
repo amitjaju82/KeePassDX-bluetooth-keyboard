@@ -97,7 +97,7 @@
     <string name="html_about_bluetooth_hid">This build adds &lt;strong&gt;Bluetooth keyboard&lt;/strong&gt; auto-type: the phone presents itself to a paired computer as a Bluetooth keyboard and types your entries, with &lt;strong&gt;no dongle and nothing installed on the computer&lt;/strong&gt;.
         \n\nMaintained by &lt;strong&gt;Amit Jaju&lt;/strong&gt; at &lt;a href="https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard"&gt;github.com/amitjaju82/KeePassDX-bluetooth-keyboard&lt;/a&gt;.
         \n\nThe HID transport is ported from &lt;a href="https://github.com/tejado/Authorizer"&gt;Authorizer&lt;/a&gt; by Tjado Mäcke (GPL-3.0), which in turn builds on Google\'s WearMouse sample (Apache-2.0). The report pacing and stuck-key fix come from &lt;a href="https://github.com/amitjaju82/Authorizer/tree/bluetooth-hid-autotype-fixes"&gt;amitjaju82/Authorizer&lt;/a&gt;.
-        \n\nThis is a community fork and is &lt;strong&gt;not affiliated with Kunzisoft&lt;/strong&gt;. Please do not report issues with it to the upstream KeePassDX project.</string>
+        \n\nThis is a community fork and is &lt;strong&gt;not affiliated with Kunzisoft&lt;/strong&gt;. Report issues with it on &lt;a href="https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard/issues"&gt;this fork\'s tracker&lt;/a&gt;, not to the upstream project. The original KeePassDX lives at &lt;a href="https://www.keepassdx.com"&gt;keepassdx.com&lt;/a&gt; and deserves your support.</string>
     <string name="entry_accessed">Accessed</string>
     <string name="entry_cancel">Cancel</string>
     <string name="entry_notes">Notes</string>
@@ -571,9 +571,24 @@
     <string name="bluetooth_hid_scan_title">Add a computer</string>
     <string name="bluetooth_hid_scan_summary">Search for a nearby computer to pair with</string>
     <string name="bluetooth_hid_scanning">Searching…</string>
-    <string name="bluetooth_hid_no_devices">No computer paired yet</string>
+    <string name="bluetooth_hid_no_devices">No computer added yet</string>
+    <string name="bluetooth_hid_no_devices_summary">Add the computers you want to type into. Only these are offered when you send.</string>
+    <string name="bluetooth_hid_candidates_title">Available devices</string>
+    <string name="bluetooth_hid_candidates_empty">Searching for computers…</string>
+    <string name="bluetooth_hid_add_done">Done adding</string>
+    <string name="bluetooth_hid_remove">Remove from my computers</string>
+    <string name="bluetooth_hid_added">%1$s added</string>
+    <string name="bluetooth_hid_error_no_computers">No computers added yet. Add one in Settings, Bluetooth keyboard.</string>
     <string name="bluetooth_hid_device_default">Default · %1$s</string>
     <string name="bluetooth_hid_choose_computer">Type into which computer?</string>
+    <string name="bluetooth_hid_speed_title">Typing speed</string>
+    <string name="bluetooth_hid_speed_summary">Slow this down if the computer misses characters</string>
+    <string-array name="bluetooth_hid_speed_entries">
+        <item>Fast</item>
+        <item>Normal</item>
+        <item>Slow</item>
+        <item>Very slow</item>
+    </string-array>
     <string name="bluetooth_hid_state_connected">Connected</string>
     <string name="bluetooth_hid_state_connecting">Connecting…</string>
     <string name="bluetooth_hid_state_paired">Paired</string>

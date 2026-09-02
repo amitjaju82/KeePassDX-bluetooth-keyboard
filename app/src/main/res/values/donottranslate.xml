@@ -35,10 +35,16 @@
     <string name="keepro_app_id" translatable="false">com.kunzisoft.keepass.pro</string>
     <string name="key_driver_app_id" translatable="false">com.kunzisoft.hardware.key</string>
     <string name="key_driver_url" translatable="false">https://gitlab.com/kunzisoft/android-hardware-key-driver/-/releases/</string>
+    <!-- Fork: the app's own entry points - homepage, issue tracker and the "i" on the file
+         screen - lead to this fork. Bug reports about the Bluetooth keyboard must not land in
+         Kunzisoft's tracker. The per-feature help links further down still point at the
+         upstream wiki, which genuinely documents those features and is the right reference.
+         Donations stay with Kunzisoft: this fork adds one feature, the app is theirs. -->
     <string name="contribution_url" translatable="false">https://www.keepassdx.com/#donation</string>
-    <string name="homepage_url" translatable="false">https://www.keepassdx.com</string>
+    <string name="homepage_url" translatable="false">https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard</string>
+    <string name="upstream_homepage_url" translatable="false">https://www.keepassdx.com</string>
     <string name="external_icon_url" translatable="false">https://www.keepassdx.com/#icons</string>
-    <string name="issues_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/issues</string>
+    <string name="issues_url" translatable="false">https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard/issues</string>
     <string name="credentials_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/Credentials</string>
     <string name="otp_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/OTP</string>
     <string name="device_unlock_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/Device-Unlocking</string>
@@ -47,7 +53,11 @@
     <string name="passkeys_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/Passkeys</string>
     <string name="user_verification_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/User-Verification</string>
     <string name="autofill_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/Autofill</string>
-    <string name="file_manager_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/File-Manager-and-Sync</string>
+    <!-- The "i" on the file-selection toolbar. Points at this fork so the app's own entry
+         point leads to the fork's documentation; the README links onward to the upstream
+         wiki, which is still the reference for file manager and sync behaviour. -->
+    <string name="file_manager_explanation_url" translatable="false">https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard#readme</string>
+    <string name="upstream_file_manager_explanation_url" translatable="false">https://github.com/Kunzisoft/KeePassDX/wiki/File-Manager-and-Sync</string>
     <string name="html_rose">--,--`--,{@</string>
 
     <!-- File Path -->
@@ -130,7 +140,18 @@
     <string name="bluetooth_hid_append_enter_key" translatable="false">bluetooth_hid_append_enter_key</string>
     <bool name="bluetooth_hid_append_enter_default" translatable="false">false</bool>
     <string name="bluetooth_hid_devices_key" translatable="false">bluetooth_hid_devices_key</string>
+    <string name="bluetooth_hid_speed_key" translatable="false">bluetooth_hid_speed_key</string>
+    <string name="bluetooth_hid_speed_default" translatable="false">12</string>
+    <!-- Milliseconds between HID reports. 12 is the floor the advertised QoS supports;
+         slower values help hosts that drop keystrokes. -->
+    <string-array name="bluetooth_hid_speed_values" translatable="false">
+        <item>12</item>
+        <item>25</item>
+        <item>40</item>
+        <item>60</item>
+    </string-array>
     <string name="bluetooth_hid_scan_key" translatable="false">bluetooth_hid_scan_key</string>
+    <string name="bluetooth_hid_candidates_key" translatable="false">bluetooth_hid_candidates_key</string>
     <!-- Values must match net.tjado.authorizer.HidKeyboardOutput.Language names exactly,
          they are resolved with Language.valueOf(). -->
     <string-array name="bluetooth_hid_layout_values" translatable="false">

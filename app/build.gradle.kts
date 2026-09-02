@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -40,9 +42,51 @@ android {
         manifestPlaceholders["googlePlayServicesPackage"] = gmsPackage
     }
 
+    /*
+     * Release signing.
+     *
+     * Credentials come from local.properties (gitignored) or the environment, never from the
+     * repository. If they are absent the release build is simply left unsigned rather than
+     * failing, so anyone can still clone and build a debug APK without a key.
+     *
+     * Set in local.properties:
+     *   releaseStoreFile=C:/Users/you/keys/keepassdx-bt-release.jks
+     *   releaseStorePassword=...
+     *   releaseKeyAlias=keepassdx-bt
+     *   releaseKeyPassword=...
+     * or as env vars KEEPASSDX_BT_STORE_FILE / _STORE_PASSWORD / _KEY_ALIAS / _KEY_PASSWORD.
+     */
+    val localProps = Properties().apply {
+        rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+    }
+    fun signingValue(propKey: String, envKey: String): String? =
+        localProps.getProperty(propKey) ?: System.getenv(envKey)
+
+    val releaseStoreFile = signingValue("releaseStoreFile", "KEEPASSDX_BT_STORE_FILE")
+    val hasReleaseSigning = releaseStoreFile != null && file(releaseStoreFile).exists()
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseStoreFile!!)
+                storePassword = signingValue("releaseStorePassword", "KEEPASSDX_BT_STORE_PASSWORD")
+                keyAlias = signingValue("releaseKeyAlias", "KEEPASSDX_BT_KEY_ALIAS")
+                keyPassword = signingValue("releaseKeyPassword", "KEEPASSDX_BT_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                logger.warn(
+                    "No release signing key configured; the release APK will be unsigned. " +
+                    "See the signing block in app/build.gradle.kts."
+                )
+            }
         }
     }
 

@@ -93,3 +93,9 @@ releases/*
 
 # Local scripts
 scripts/*
+
+# Release signing material - must never be committed
+*.jks
+*.keystore
+keystore.properties
+signing.properties

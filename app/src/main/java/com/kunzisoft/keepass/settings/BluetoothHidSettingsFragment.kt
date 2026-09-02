@@ -35,6 +35,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import com.kunzisoft.keepass.R
@@ -144,6 +145,24 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
             onScanClicked()
             true
         }
+
+        // ListPreference shows either the value or a static summary, not both. The value
+        // matters (which speed am I on?) and so does the hint (why would I change it), so
+        // combine them.
+        findPreference<ListPreference>(getString(R.string.bluetooth_hid_speed_key))?.apply {
+            summaryProvider = null
+            updateSpeedSummary(this)
+            setOnPreferenceChangeListener { pref, newValue ->
+                (pref as ListPreference).value = newValue as String
+                updateSpeedSummary(pref)
+                true
+            }
+        }
+    }
+
+    private fun updateSpeedSummary(preference: ListPreference) {
+        val label = preference.entry ?: return
+        preference.summary = getString(R.string.bluetooth_hid_speed_summary_value, label)
     }
 
     private fun showUnsupported(summaryRes: Int) {
@@ -310,9 +329,13 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
 
         val connectedName = BluetoothHidManager.connectedDeviceName.value
 
+        var order = 0
         chosen.forEach { wrapper ->
             category.addPreference(Preference(context).apply {
                 isPersistent = false
+                // Explicit order, otherwise the XML-defined scan row keeps its lower order
+                // and floats above the computers the user added.
+                this.order = order++
                 title = wrapper.name ?: wrapper.address
                 summary = describe(listing, wrapper, connectedName)
                 setOnPreferenceClickListener {
@@ -326,12 +349,16 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
             category.addPreference(Preference(context).apply {
                 isPersistent = false
                 isSelectable = false
+                this.order = order++
                 title = getString(R.string.bluetooth_hid_no_devices)
                 summary = getString(R.string.bluetooth_hid_no_devices_summary)
             })
         }
 
-        scan?.let { category.addPreference(it) }
+        scan?.let {
+            it.order = order
+            category.addPreference(it)
+        }
         updateScanRow()
         refreshCandidateList(chosen.map { it.address }.toSet())
     }

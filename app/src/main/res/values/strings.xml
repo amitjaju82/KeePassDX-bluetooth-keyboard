@@ -583,6 +583,7 @@
     <string name="bluetooth_hid_choose_computer">Type into which computer?</string>
     <string name="bluetooth_hid_speed_title">Typing speed</string>
     <string name="bluetooth_hid_speed_summary">Slow this down if the computer misses characters</string>
+    <string name="bluetooth_hid_speed_summary_value">%1$s · Slow this down if the computer misses characters</string>
     <string-array name="bluetooth_hid_speed_entries">
         <item>Fast</item>
         <item>Normal</item>

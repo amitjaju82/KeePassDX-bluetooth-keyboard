@@ -31,6 +31,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -58,7 +59,11 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
     private var bluetoothAdapter: BluetoothAdapter? = null
 
     private var devicesCategory: PreferenceCategory? = null
+    private var candidatesCategory: PreferenceCategory? = null
     private var scanPreference: Preference? = null
+
+    /** True while the user is picking a new computer to add. */
+    private var addMode = false
 
     /** Devices found by the current discovery run, keyed by address to avoid duplicates. */
     private val discovered = LinkedHashMap<String, BluetoothDevice>()
@@ -111,6 +116,7 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
         setPreferencesFromResource(R.xml.preferences_bluetooth_hid, rootKey)
 
         devicesCategory = findPreference(getString(R.string.bluetooth_hid_devices_key))
+        candidatesCategory = findPreference(getString(R.string.bluetooth_hid_candidates_key))
         scanPreference = findPreference(getString(R.string.bluetooth_hid_scan_key))
 
         if (!BluetoothHidManager.isApiSupported()) {
@@ -185,6 +191,7 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
         } catch (e: IllegalArgumentException) {
             // Never registered, because the feature is unavailable on this device.
         }
+        addMode = false
         stopDiscovery()
         super.onPause()
     }
@@ -215,14 +222,19 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
             return
         }
 
+        if (addMode) {
+            // Second tap closes the picker again.
+            addMode = false
+            stopDiscovery()
+            refreshDeviceList()
+            return
+        }
+
         // Registering as a keyboard is what makes the computer offer to pair with us.
         BluetoothHidManager.start(requireContext())
-
-        if (isDiscovering()) {
-            stopDiscovery()
-        } else {
-            startDiscovery()
-        }
+        addMode = true
+        startDiscovery()
+        refreshDeviceList()
     }
 
     @Suppress("MissingPermission")
@@ -257,75 +269,146 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
 
     private fun updateScanRow() {
         scanPreference?.apply {
-            if (isDiscovering()) {
-                title = getString(R.string.bluetooth_hid_scanning)
-                summary = getString(R.string.bluetooth_hid_pair_help)
-            } else {
-                title = getString(R.string.bluetooth_hid_scan_title)
-                summary = getString(R.string.bluetooth_hid_scan_summary)
+            when {
+                addMode && isDiscovering() -> {
+                    title = getString(R.string.bluetooth_hid_scanning)
+                    summary = getString(R.string.bluetooth_hid_pair_help)
+                }
+                addMode -> {
+                    title = getString(R.string.bluetooth_hid_add_done)
+                    summary = getString(R.string.bluetooth_hid_pair_help)
+                }
+                else -> {
+                    title = getString(R.string.bluetooth_hid_scan_title)
+                    summary = getString(R.string.bluetooth_hid_scan_summary)
+                }
             }
         }
     }
 
     /**
-     * Rebuild the device rows: bonded computers first, then anything discovery has turned up
-     * that is not already bonded.
+     * Rebuild both lists.
+     *
+     * "Computers" holds only the devices the user has explicitly chosen to type into. Every
+     * other paired device - headphones, watches, speakers - is deliberately kept out: they are
+     * never valid targets, and a long list of them at send time is the fastest way to type a
+     * password into the wrong thing. Unchosen devices appear only while adding.
      */
     private fun refreshDeviceList() {
         val category = devicesCategory ?: return
         val listing = deviceListing ?: return
         val context = context ?: return
 
-        // Drop every row except the scan action, then re-add.
         val scan = scanPreference
         category.removeAll()
 
-        val bonded = try {
-            listing.getAvailableDevices()
+        val chosen = try {
+            listing.availableKeyboardHostDevices
         } catch (e: SecurityException) {
             emptyList<BluetoothDeviceWrapper>()
         }
 
         val connectedName = BluetoothHidManager.connectedDeviceName.value
-        val bondedAddresses = HashSet<String>()
 
-        bonded.forEach { wrapper ->
-            bondedAddresses.add(wrapper.address)
+        chosen.forEach { wrapper ->
             category.addPreference(Preference(context).apply {
                 isPersistent = false
                 title = wrapper.name ?: wrapper.address
                 summary = describe(listing, wrapper, connectedName)
                 setOnPreferenceClickListener {
-                    showPairedDeviceActions(listing, wrapper)
+                    showChosenDeviceActions(listing, wrapper)
+                    true
+                }
+            })
+        }
+
+        if (chosen.isEmpty()) {
+            category.addPreference(Preference(context).apply {
+                isPersistent = false
+                isSelectable = false
+                title = getString(R.string.bluetooth_hid_no_devices)
+                summary = getString(R.string.bluetooth_hid_no_devices_summary)
+            })
+        }
+
+        scan?.let { category.addPreference(it) }
+        updateScanRow()
+        refreshCandidateList(chosen.map { it.address }.toSet())
+    }
+
+    /** The "Available devices" list, shown only while adding a computer. */
+    private fun refreshCandidateList(chosenAddresses: Set<String>) {
+        val category = candidatesCategory ?: return
+        val listing = deviceListing ?: return
+        val context = context ?: return
+
+        category.isVisible = addMode
+        category.removeAll()
+        if (!addMode) return
+
+        val bondedCandidates = try {
+            listing.availableDevices.filter { it.address !in chosenAddresses }
+        } catch (e: SecurityException) {
+            emptyList<BluetoothDeviceWrapper>()
+        }
+        val bondedAddresses = bondedCandidates.map { it.address }.toSet()
+
+        bondedCandidates.forEach { wrapper ->
+            category.addPreference(Preference(context).apply {
+                isPersistent = false
+                title = wrapper.name ?: wrapper.address
+                summary = getString(R.string.bluetooth_hid_state_paired)
+                setOnPreferenceClickListener {
+                    addComputer(wrapper.device)
                     true
                 }
             })
         }
 
         discovered.values
-            .filter { it.address !in bondedAddresses }
+            .filter { it.address !in chosenAddresses && it.address !in bondedAddresses }
             .forEach { device ->
                 category.addPreference(Preference(context).apply {
                     isPersistent = false
                     title = safeName(device) ?: device.address
                     summary = device.address
                     setOnPreferenceClickListener {
-                        pair(device)
+                        addComputer(device)
                         true
                     }
                 })
             }
 
-        if (bonded.isEmpty() && discovered.isEmpty()) {
+        if (category.preferenceCount == 0) {
             category.addPreference(Preference(context).apply {
                 isPersistent = false
                 isSelectable = false
-                summary = getString(R.string.bluetooth_hid_no_devices)
+                summary = getString(R.string.bluetooth_hid_candidates_empty)
             })
         }
+    }
 
-        scan?.let { category.addPreference(it) }
-        updateScanRow()
+    /** Mark a device as one of the user's computers, and connect so the pairing registers. */
+    private fun addComputer(device: BluetoothDevice) {
+        val listing = deviceListing ?: return
+        stopDiscovery()
+        addMode = false
+
+        listing.cacheHidDeviceAsKeyboard(device)
+        if (listing.hidDefaultDevice == null) {
+            // First computer added becomes the default, so it is offered first at send time.
+            listing.cacheHidDefaultDevice(device)
+        }
+        BluetoothHidManager.pairAsKeyboard(requireContext(), device)
+
+        val name = safeName(device) ?: device.address
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.bluetooth_hid_added, name),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        refreshDeviceList()
     }
 
     private fun describe(
@@ -354,36 +437,28 @@ class BluetoothHidSettingsFragment : NestedSettingsFragment() {
         null
     }
 
-    private fun pair(device: BluetoothDevice) {
-        stopDiscovery()
-        deviceListing?.cacheHidDeviceAsKeyboard(device)
-        deviceListing?.cacheHidDefaultDevice(device)
-        BluetoothHidManager.pairAsKeyboard(requireContext(), device)
-        refreshDeviceList()
-    }
-
-    private fun showPairedDeviceActions(
+    private fun showChosenDeviceActions(
         listing: BluetoothDeviceListing,
         wrapper: BluetoothDeviceWrapper
     ) {
         val actions = arrayOf(
             getString(R.string.bluetooth_hid_connect),
             getString(R.string.bluetooth_hid_set_default),
+            getString(R.string.bluetooth_hid_remove),
             getString(R.string.bluetooth_hid_forget)
         )
         AlertDialog.Builder(requireContext())
             .setTitle(wrapper.name ?: wrapper.address)
             .setItems(actions) { _, which ->
                 when (which) {
-                    0 -> {
-                        listing.cacheHidDeviceAsKeyboard(wrapper.device)
-                        BluetoothHidManager.pairAsKeyboard(requireContext(), wrapper.device)
-                    }
-                    1 -> {
-                        listing.cacheHidDeviceAsKeyboard(wrapper.device)
-                        listing.cacheHidDefaultDevice(wrapper.device)
-                    }
+                    0 -> BluetoothHidManager.pairAsKeyboard(requireContext(), wrapper.device)
+                    1 -> listing.cacheHidDefaultDevice(wrapper.device)
                     2 -> {
+                        // Drop it from the send list but leave the Bluetooth pairing alone;
+                        // the user may still use the device for other things.
+                        listing.clearHidDevice(wrapper.device)
+                    }
+                    3 -> {
                         listing.clearHidDevice(wrapper.device)
                         try {
                             // Reflective call into a hidden framework method; it can simply

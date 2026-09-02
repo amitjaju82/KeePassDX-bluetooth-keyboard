@@ -265,14 +265,18 @@ class EntryFragment: DatabaseFragment() {
             return
         }
 
+        // Only the computers the user explicitly chose, never every bonded device. Headphones
+        // and watches are not valid targets, and a long list of them is the fastest way to
+        // type a password into the wrong thing.
         val candidates = try {
-            listing.availableDevices
+            listing.availableKeyboardHostDevices
         } catch (e: SecurityException) {
             emptyList()
         }
 
         if (candidates.isEmpty()) {
-            showBluetoothMessage(getString(R.string.bluetooth_hid_error_no_device), isError = true)
+            showBluetoothMessage(
+                getString(R.string.bluetooth_hid_error_no_computers), isError = true)
             return
         }
 

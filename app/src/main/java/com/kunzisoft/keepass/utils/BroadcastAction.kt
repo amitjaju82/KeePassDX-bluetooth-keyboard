@@ -34,6 +34,7 @@ import com.kunzisoft.keepass.R
 import com.kunzisoft.keepass.app.AppLifecycleObserver
 import com.kunzisoft.keepass.database.ContextualDatabase
 import com.kunzisoft.keepass.credentialprovider.magikeyboard.MagikeyboardService
+import com.kunzisoft.keepass.services.BluetoothHidNotificationService
 import com.kunzisoft.keepass.services.KeyboardEntryNotificationService
 import com.kunzisoft.keepass.settings.PreferencesUtil
 import com.kunzisoft.keepass.timeout.TimeoutHelper
@@ -156,6 +157,13 @@ fun Context.closeDatabase(database: ContextualDatabase?) {
     // Stop the Magikeyboard service
     stopService(Intent(this, KeyboardEntryNotificationService::class.java))
     MagikeyboardService.removeEntry(this)
+
+    // Drop the Bluetooth HID keyboard link, so a locked database never leaves a keyboard
+    // attached to the paired computer. Guarded because the service references
+    // BluetoothHidDevice, which only exists from API 28.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        stopService(Intent(this, BluetoothHidNotificationService::class.java))
+    }
 
     // Stop the notification service
     Log.i(Context::class.java.name, "Close database after inactivity or manual lock")

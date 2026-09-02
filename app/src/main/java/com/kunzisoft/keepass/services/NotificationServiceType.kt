@@ -5,5 +5,6 @@ enum class NotificationServiceType {
     ATTACHMENT,
     CLIPBOARD,
     KEYBOARD,
-    DEVICE_UNLOCK
+    DEVICE_UNLOCK,
+    BLUETOOTH_HID
 }

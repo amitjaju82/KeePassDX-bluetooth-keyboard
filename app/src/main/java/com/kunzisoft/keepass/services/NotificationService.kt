@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_NONE
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
@@ -106,6 +107,9 @@ abstract class NotificationServiceParam<T> : Service() {
                 NotificationServiceType.CLIPBOARD -> foregroundServiceTimer
                 NotificationServiceType.KEYBOARD -> foregroundServiceTimer
                 NotificationServiceType.DEVICE_UNLOCK -> foregroundServiceTimer
+                // The service exists to hold a link to an external Bluetooth HID host,
+                // which is exactly what connectedDevice describes.
+                NotificationServiceType.BLUETOOTH_HID -> FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
             }
             startForeground(notificationId, builder.build(), foregroundType)
         } else {

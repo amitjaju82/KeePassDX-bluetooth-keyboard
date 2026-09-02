@@ -21,6 +21,33 @@
         android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission
         android:name="android.permission.VIBRATE"/>
+
+    <!-- Bluetooth keyboard (HID device role). The phone presents itself to a paired
+         computer as a keyboard, so no dongle and no software on the computer is needed.
+         Requires API 28; the feature is hidden below that. -->
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <!-- Pre-Android 12 equivalents. BLUETOOTH/BLUETOOTH_ADMIN are install-time permissions;
+         discovery needed a location permission back then. maxSdkVersion keeps a password
+         manager from advertising a Location permission on modern devices. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+
     <queries>
         <!-- Apps with a launcher (getLaunchIntentForPackage)-->
         <intent>
@@ -268,6 +295,11 @@
         <service
             android:name="com.kunzisoft.keepass.services.DeviceUnlockNotificationService"
             android:foregroundServiceType="specialUse"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.kunzisoft.keepass.services.BluetoothHidNotificationService"
+            android:foregroundServiceType="connectedDevice"
             android:enabled="true"
             android:exported="false" />
         <!-- Receiver for Autofill -->

@@ -9,9 +9,14 @@ installed on the computer**.
 
 Open an entry, tap the send button on any field, pick the computer, and it is typed.
 
-> ⚠️ **Unaudited personal build.** The published APK is debug-signed and has been tested on one
-> phone against one Mac. It handles your passwords — judge accordingly, and prefer building
-> from source if you can.
+> ⚠️ **Unaudited personal build.** Written by one person and tested on one phone against one
+> Mac. It handles your passwords — judge accordingly, and prefer building from source if you
+> can.
+>
+> The published APK is signed with this fork's own release key:
+> `SHA-256: 8a6bb009e6e20eb9bb507433163449164e13136eebd5259860ce2d32896bc718`
+> Check it before installing with `apksigner verify --print-certs <apk>`. Every future release
+> uses this same key — if it ever differs, do not install.
 
 > **Not affiliated with Kunzisoft.** This is a community fork. Please do not report issues with
 > it to the upstream KeePassDX project.

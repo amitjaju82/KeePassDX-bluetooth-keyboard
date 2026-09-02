@@ -664,6 +664,15 @@ object PreferencesUtil {
             ?: context.getString(R.string.bluetooth_hid_layout_default)
     }
 
+    /** Milliseconds between HID reports; higher is slower but more reliable. */
+    fun getBluetoothHidReportDelayMs(context: Context): Long {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val stored = prefs.getString(context.getString(R.string.bluetooth_hid_speed_key),
+            context.getString(R.string.bluetooth_hid_speed_default))
+        return stored?.toLongOrNull()
+            ?: context.getString(R.string.bluetooth_hid_speed_default).toLong()
+    }
+
     fun isBluetoothHidAppendEnterEnabled(context: Context): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         return prefs.getBoolean(context.getString(R.string.bluetooth_hid_append_enter_key),

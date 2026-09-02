@@ -256,6 +256,15 @@ public class HidDeviceController
      * responsive while we are typing.
      */
     public HidReportTransmitter.Result sendToKeyboardHost(byte[] keyboardOutput) {
+        return sendToKeyboardHost(keyboardOutput, HidReportTransmitter.INTER_REPORT_DELAY_MS);
+    }
+
+    /**
+     * @param interReportDelayMs pacing between reports; raise it for a host that drops
+     *                           keystrokes at the default rate.
+     */
+    public HidReportTransmitter.Result sendToKeyboardHost(byte[] keyboardOutput,
+                                                          long interReportDelayMs) {
         if (keyboardOutput == null) {
             return null;
         }
@@ -264,7 +273,8 @@ public class HidDeviceController
             Log.d(TAG, "sendToKeyboardHost: " +
                        HidKeyboardReportSequence.completeReportCount(keyboardOutput) +
                        " keystroke(s)");
-            return new HidReportTransmitter(reportSink).transmit(keyboardOutput);
+            return new HidReportTransmitter(reportSink, interReportDelayMs)
+                    .transmit(keyboardOutput);
         }
     }
 

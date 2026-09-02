@@ -39,6 +39,7 @@ import com.kunzisoft.keepass.hid.BluetoothHidManager
 import com.kunzisoft.keepass.hid.BluetoothHidManager.LinkState
 import com.kunzisoft.keepass.hid.BluetoothHidManager.SendResult
 import com.kunzisoft.keepass.hid.BluetoothHidManager.SendStatus
+import com.kunzisoft.keepass.settings.PreferencesUtil
 import net.tjado.bluetooth.HidDeviceController
 
 /**
@@ -228,9 +229,19 @@ class BluetoothHidNotificationService : LockNotificationService() {
             return
         }
 
+        // Read on the main thread; the worker below must not touch preferences.
+        val reportDelayMs = PreferencesUtil.getBluetoothHidReportDelayMs(this)
+
         val queued = transmitHandler?.post {
             try {
-                val result = hidDeviceController.sendToKeyboardHost(payload)
+                // A freshly established HID link is not ready for input reports the instant
+                // STATE_CONNECTED arrives: the host still has to finish bringing up the
+                // interrupt channel, and reports sent into that window are accepted by the
+                // local stack but never land. Because every send now builds its own
+                // connection, this settle is what stops the first characters going missing.
+                Thread.sleep(POST_CONNECT_SETTLE_MS)
+
+                val result = hidDeviceController.sendToKeyboardHost(payload, reportDelayMs)
                 // sendReport() is not queued: a congested link silently refuses reports. Report
                 // that as a failure rather than claiming the credential was typed.
                 val status = when {
@@ -242,6 +253,9 @@ class BluetoothHidNotificationService : LockNotificationService() {
                     Log.w(TAG, "transmission incomplete: $result")
                 }
                 finishRequest(requestId, status)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                finishRequest(requestId, SendStatus.REFUSED_BY_STACK)
             } finally {
                 // The payload is the credential in keystroke form; do not leave it on the heap.
                 payload.fill(0)
@@ -405,6 +419,16 @@ class BluetoothHidNotificationService : LockNotificationService() {
 
         /** How long to wait for the host to attach before giving up on a send. */
         private const val CONNECT_TIMEOUT_MS = 10_000L
+
+        /**
+         * Pause between the host attaching and the first keystroke.
+         *
+         * Authorizer used 100ms here. This build connects fresh for every send rather than
+         * holding a link open, so it pays this cost every time and uses a more generous value:
+         * a report sent before the host's interrupt channel is up is accepted locally and
+         * silently lost, which shows up as random missing characters.
+         */
+        private const val POST_CONNECT_SETTLE_MS = 400L
 
         /**
          * Pause between the last keystroke and dropping the link, so the final all-keys-up

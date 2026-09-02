@@ -114,10 +114,22 @@ public final class HidReportTransmitter
     }
 
     private final ReportSink sink;
+    private final long interReportDelayMs;
 
     public HidReportTransmitter(ReportSink sink)
     {
+        this(sink, INTER_REPORT_DELAY_MS);
+    }
+
+    /**
+     * @param interReportDelayMs pacing between reports. {@link #INTER_REPORT_DELAY_MS} is the
+     *                           smallest value the advertised QoS contract supports; some hosts
+     *                           need more, so this is user-adjustable in KeePassDX-BT.
+     */
+    public HidReportTransmitter(ReportSink sink, long interReportDelayMs)
+    {
         this.sink = sink;
+        this.interReportDelayMs = Math.max(INTER_REPORT_DELAY_MS, interReportDelayMs);
     }
 
     /**
@@ -136,7 +148,7 @@ public final class HidReportTransmitter
 
         List<byte[]> reports = HidKeyboardReportSequence.expand(rawScancodes);
         sink.log("transmitting " + reports.size() + " HID reports at " +
-                 INTER_REPORT_DELAY_MS + "ms pacing");
+                 interReportDelayMs + "ms pacing");
 
         int sent = 0;
         int dropped = 0;
@@ -146,7 +158,7 @@ public final class HidReportTransmitter
         try {
             for (int i = 0; i < reports.size(); i++) {
                 if (i > 0) {
-                    sink.sleep(INTER_REPORT_DELAY_MS);
+                    sink.sleep(interReportDelayMs);
                 }
 
                 byte[] report = reports.get(i);

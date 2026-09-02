@@ -19,6 +19,11 @@ Open an entry, tap the send button on any field, pick the computer, and it is ty
 Installs as `com.kunzisoft.keepass.bt`, **alongside** upstream KeePassDX rather than replacing
 it. Your `.kdbx` file is untouched; app settings are not shared with an existing install.
 
+| Entry fields | Pick the computer | Settings |
+|---|---|---|
+| <img src="art/bt/02-entry.png" width="230" alt="An entry with a send button on the username and password fields"> | <img src="art/bt/03-picker.png" width="230" alt="A dialog asking which computer to type into"> | <img src="art/bt/01-settings.png" width="230" alt="The Bluetooth keyboard settings screen"> |
+| A send button next to copy, on every field | Asked every time, so a credential never goes to the wrong machine | Layout, typing speed, and the computers you have added |
+
 ## Versioning
 
 `<upstream version>-bt<fork release>` — so `4.5.2-bt1` is the first fork release on top of

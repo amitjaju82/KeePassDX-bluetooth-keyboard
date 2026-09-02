@@ -125,6 +125,18 @@
                         android:hint="@string/otp_secret" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Fills every field above from an otpauth:// QR code. Optional: the same
+                     URI can still be handed over from any external scanner app. -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/setup_otp_scan_qr"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/otp_scan_qr"
+                    app:icon="@drawable/ic_otp_white_24dp"
+                    app:iconGravity="textStart" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

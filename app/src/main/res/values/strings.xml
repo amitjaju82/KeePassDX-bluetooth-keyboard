@@ -581,6 +581,12 @@
     <string name="bluetooth_hid_error_no_computers">No computers added yet. Add one in Settings, Bluetooth keyboard.</string>
     <string name="bluetooth_hid_device_default">Default · %1$s</string>
     <string name="bluetooth_hid_choose_computer">Type into which computer?</string>
+    <!-- OTP QR scanning -->
+    <string name="otp_scan_qr">Scan QR code</string>
+    <string name="otp_scan_qr_prompt">Point the camera at the two-factor QR code</string>
+    <string name="otp_scan_qr_ok">One-time password settings filled in</string>
+    <string name="otp_scan_qr_invalid">That QR code is not a one-time password setup code</string>
+    <string name="otp_scan_qr_no_camera_permission">Camera access is needed to scan a QR code. You can still paste the secret, or open an otpauth:// link from any scanner app.</string>
     <string name="bluetooth_hid_speed_title">Typing speed</string>
     <string name="bluetooth_hid_speed_summary">Slow this down if the computer misses characters</string>
     <string name="bluetooth_hid_speed_summary_value">%1$s · Slow this down if the computer misses characters</string>

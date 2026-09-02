@@ -10,6 +10,9 @@ android-material = "1.9.0"
 android-test = "1.6.0"
 commons-io = "2.21.0"
 joda-time = "2.14.1"
+# QR scanning for OTP setup. ZXing is Apache-2.0 and pure Java, unlike ML Kit which is a
+# proprietary Google blob and would disqualify the libre flavour from F-Droid.
+zxing-embedded = "4.3.0"
 room = "2.6.1"
 multidex = "1.0.3"
 preference-ktx = "1.2.0"
@@ -63,6 +66,8 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "android-test" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+zxing-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-embedded" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

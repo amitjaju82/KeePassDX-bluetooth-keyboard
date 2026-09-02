@@ -196,6 +196,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.service)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.google.material)
+    // QR scanning for OTP setup (camera permission requested only on demand)
+    implementation(libs.zxing.embedded)
     // Token auto complete
     // From sources until https://github.com/splitwise/TokenAutoComplete/pull/422 fixed
     implementation(libs.tokenautocomplete)

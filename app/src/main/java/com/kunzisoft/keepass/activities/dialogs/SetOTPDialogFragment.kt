@@ -19,8 +19,17 @@
  */
 package com.kunzisoft.keepass.activities.dialogs
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.pm.PackageManager
+import android.widget.Button
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
+import com.kunzisoft.keepass.otp.OtpEntryFields
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -100,6 +109,71 @@ class SetOTPDialogFragment : DatabaseDialogFragment() {
         false
     }
 
+    private var otpScanButton: Button? = null
+
+    /**
+     * QR scanning is optional. The camera permission is requested here, when the user taps
+     * Scan, rather than being asked for at install or launch - the rest of the dialog works
+     * without it, and an otpauth:// URI can still be handed over by any external scanner.
+     */
+    private val scanLauncher = registerForActivityResult(ScanContract()) { result ->
+        result.contents?.let { applyScannedUri(it) }
+    }
+
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            launchScanner()
+        } else {
+            Toast.makeText(context, R.string.otp_scan_qr_no_camera_permission,
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun onScanClicked() {
+        resetAppTimeout()
+        val ctx = context ?: return
+        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED) {
+            launchScanner()
+        } else {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun launchScanner() {
+        scanLauncher.launch(ScanOptions().apply {
+            setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+            setPrompt(getString(R.string.otp_scan_qr_prompt))
+            setBeepEnabled(false)
+            // The scanned value is a shared secret; do not leave a copy in the gallery.
+            setBarcodeImageEnabled(false)
+            setOrientationLocked(false)
+        })
+    }
+
+    /** Fill every field from a scanned otpauth:// URI. */
+    private fun applyScannedUri(scanned: String) {
+        val element = try {
+            OtpEntryFields.parseOTPUri(scanned)
+        } catch (e: Exception) {
+            null
+        }
+        if (element == null) {
+            // Never echo the scanned content: an unrecognised QR may still be a secret.
+            Toast.makeText(context, R.string.otp_scan_qr_invalid, Toast.LENGTH_LONG).show()
+            return
+        }
+        mOtpElement.clear()
+        mOtpElement = element
+        mManualEvent = false
+        upgradeType()
+        upgradeTokenType()
+        upgradeParameters()
+        Toast.makeText(context, R.string.otp_scan_qr_ok, Toast.LENGTH_SHORT).show()
+    }
+
     private var mSecretWellFormed = false
     private var mCounterWellFormed = false
     private var mPeriodWellFormed = false
@@ -146,6 +220,8 @@ class SetOTPDialogFragment : DatabaseDialogFragment() {
             otpSecretContainer = root?.findViewById(R.id.setup_otp_secret_label)
             otpSecretTextView = root?.findViewById(R.id.setup_otp_secret)
             otpAlgorithmSpinner = root?.findViewById(R.id.setup_otp_algorithm)
+            otpScanButton = root?.findViewById(R.id.setup_otp_scan_qr)
+            otpScanButton?.setOnClickListener { onScanClicked() }
             otpPeriodContainer= root?.findViewById(R.id.setup_otp_period_label)
             otpPeriodTextView = root?.findViewById(R.id.setup_otp_period)
             otpCounterContainer= root?.findViewById(R.id.setup_otp_counter_label)

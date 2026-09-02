@@ -48,6 +48,18 @@
         android:name="android.hardware.bluetooth"
         android:required="false" />
 
+    <!-- Optional QR scanning for OTP setup. The permission is requested only when the user
+         taps Scan, never at install or launch, and the app remains fully usable without it:
+         KeePassDX already accepts otpauth:// URIs from any external scanner. required=false
+         so the app still installs on devices with no camera. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
     <queries>
         <!-- Apps with a launcher (getLaunchIntentForPackage)-->
         <intent>

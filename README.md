@@ -37,7 +37,7 @@ digits, so it stays ordered against upstream and leaves room for rebases onto la
 
 | Version | Based on | Notes |
 |---|---|---|
-| 4.5.2-bt1 | KeePassDX 4.5.2 | First release: Bluetooth keyboard auto-type |
+| 4.5.2-bt1 | KeePassDX 4.5.2 | First release: Bluetooth keyboard auto-type, plus QR scanning for one-time passwords |
 
 ## Why this exists
 
@@ -81,11 +81,27 @@ entry field ──▶ scancodes for the chosen layout ──▶ HID reports ─�
 - **8 host keyboard layouts** — `en_US`, `en_GB`, `de_DE`, `AppleMac_de_DE`, `de_CH`, `fr_CH`,
   `fr_FR`, `neo`
 - **Optional Enter afterwards**, to submit the form
+- **Adjustable typing speed**, for a computer that drops keystrokes at the default rate
 - **Locks with the database.** Lock, timeout or screen-off tears down the link, unregisters the
   keyboard and zeroes the pending keystrokes
 - **Nothing is half-typed.** If the selected layout cannot produce a character, the send is
   refused with a count rather than typing a partial password
 - Everything else in KeePassDX — clipboard, Magikeyboard, Autofill — is **untouched**
+
+### Also added: QR scanning for one-time passwords
+
+A **Scan QR code** button in the OTP setup dialog, so a two-factor QR can be captured without
+leaving the app.
+
+The camera is treated as strictly optional. The permission is requested **only when you tap
+Scan** — never at install or launch — and declining it leaves the rest of the dialog working.
+The app also still accepts `otpauth://` URIs handed over by any external scanner, exactly as
+upstream KeePassDX does, so scanning in-app is a convenience rather than the only route.
+
+It uses [ZXing](https://github.com/journeyapps/zxing-android-embedded) (Apache-2.0, pure Java)
+rather than Google's ML Kit, which is a proprietary binary and would disqualify the `libre`
+flavour from F-Droid. The scanner is configured not to save a barcode image, and neither a
+scanned URI nor a failed scan is logged — an unrecognised QR may still be a secret.
 
 ## Documentation for everything else
 

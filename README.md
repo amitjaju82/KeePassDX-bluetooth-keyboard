@@ -134,6 +134,24 @@ explains how database files are opened and kept in sync.
 If the computer does not offer to pair, remove the phone from its Bluetooth list and tap
 **Add a computer** again.
 
+### Managing your computers
+
+**Computers** lists only the machines you have deliberately added — not every paired Bluetooth
+device. Headphones, watches and speakers are never valid targets, and a long list of them at
+send time is the quickest way to type a password into the wrong thing. Paired-but-unchosen
+devices appear only while you are adding one.
+
+Tapping a computer offers:
+
+| | |
+|---|---|
+| **Connect now** | Bring the link up without sending anything, useful when first pairing |
+| **Use this computer by default** | Offered first in the send picker, and marked *Default* |
+| **Remove from my computers** | Drops it from the send list but leaves the Bluetooth pairing alone, so you can still use the device for other things |
+| **Forget this computer** | Removes it from the list *and* unpairs it |
+
+The first computer you add becomes the default automatically.
+
 ## Security notes
 
 - Keystrokes are held as a `CharArray`/`ByteArray` and zeroed after transmission, never

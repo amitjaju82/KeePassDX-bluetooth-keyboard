@@ -16,11 +16,18 @@ android {
     val gmsPackage = "com.google.android.gms"
 
     defaultConfig {
-        applicationId = "com.kunzisoft.keepass"
+        // Deliberately distinct from upstream's com.kunzisoft.keepass: this fork installs
+        // alongside KeePassDX rather than colliding with it, and can never be mistaken for an
+        // update to the upstream app. The namespace below stays upstream's, so R and
+        // BuildConfig are unchanged and rebases stay clean.
+        applicationId = "com.kunzisoft.keepass.bt"
         minSdk = 19
         targetSdk = 36
-        versionCode = 45200
-        versionName = "4.5.2"
+        // Fork versioning: <upstream version>-bt<fork release>. The version code keeps the
+        // upstream numbering and adds the fork release in the last two digits, so it stays
+        // ordered against upstream and leaves room for upstream rebases.
+        versionCode = 45200_01
+        versionName = "4.5.2-bt1"
         multiDexEnabled = true
 
         testApplicationId = "com.kunzisoft.keepass.tests"

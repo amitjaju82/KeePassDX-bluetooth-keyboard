@@ -135,6 +135,19 @@
                         android:layout_height="wrap_content"/>
 
                     <TextView
+                        android:id="@+id/activity_about_bt_fork_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/bluetooth_hid_title"
+                        style="@style/KeepassDXStyle.Title"/>
+                    <TextView
+                        android:id="@+id/activity_about_bt_fork_text"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
                         android:id="@+id/activity_about_contact_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -92,6 +92,12 @@ class AboutActivity : StylishActivity() {
             text = HtmlCompat.fromHtml(getString(R.string.html_about_contribution),
                     HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
+
+        findViewById<TextView>(R.id.activity_about_bt_fork_text).apply {
+            movementMethod = LinkMovementMethod.getInstance()
+            text = HtmlCompat.fromHtml(getString(R.string.html_about_bluetooth_hid),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

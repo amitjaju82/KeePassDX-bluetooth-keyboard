@@ -1,120 +1,183 @@
-# Android KeePassDX
+# KeePassDX-BT — Bluetooth Keyboard Auto-Type
 
-<img alt="KeePassDX Icon" src="https://raw.githubusercontent.com/Kunzisoft/KeePassDX/master/art/icon.png"> **Lightweight password safe and manager for Android**, KeePassDX allows editing encrypted data in a single file in KeePass format and fill in the forms in a secure way.
+**Current version: 4.5.2-bt1** &nbsp;·&nbsp; based on [KeePassDX 4.5.2](https://github.com/Kunzisoft/KeePassDX/releases/tag/4.5.2)
+&nbsp;·&nbsp; [**Download the APK**](https://github.com/amitjaju82/KeePassDX-bluetooth-keyboard/releases/latest)
 
-<img alt="KeePassDX Screenshot" src="https://raw.githubusercontent.com/Kunzisoft/KeePassDX/master/art/screen.jpg" width="220">
+A fork of [KeePassDX](https://github.com/Kunzisoft/KeePassDX) that lets your phone **type your
+credentials into a computer as a Bluetooth keyboard** — with **no dongle**, and **nothing
+installed on the computer**.
 
-### Features
+Open an entry, tap the send button on any field, pick the computer, and it is typed.
 
- - **Passkeys** for authentication and **local storage of private keys**.
- - **Biometric recognition** for fast unlocking (fingerprint / face unlock / …).
- - **One-Time Password** management (HOTP / TOTP) for two-factor authentication (2FA).
- - **Autofill** for easy form filling with passwords.
- - **Magikeyboard** to efficiently fill in any field.
- - Create **encrypted database files**.
- - Organisation of credentials by **entry** and in **group** trees.
- - Allows opening and **copying URI / URL fields quickly**.
- - Dynamic **templates**  for each type of entry.
- - **History** of each entry.
- - Precise management of **settings**.
- - Material design with **themes**.
- - Support for **.kdb** and **.kdbx** files (version 1 to 4) with AES - Twofish - ChaCha20 - Argon2 algorithm.
- - **Compatible** with the majority of alternative programs (KeePass, KeePassXC, KeeWeb, …).
- - Code written in **native languages** (Kotlin / Java / JNI / C).
+> ⚠️ **Unaudited personal build.** The published APK is debug-signed and has been tested on one
+> phone against one Mac. It handles your passwords — judge accordingly, and prefer building
+> from source if you can.
 
-KeePassDX is **open source** and **ad-free**.
+> **Not affiliated with Kunzisoft.** This is a community fork. Please do not report issues with
+> it to the upstream KeePassDX project.
 
-## What is KeePassDX?
+Installs as `com.kunzisoft.keepass.bt`, **alongside** upstream KeePassDX rather than replacing
+it. Your `.kdbx` file is untouched; app settings are not shared with an existing install.
 
-An alternative to remembering an endless list of passwords manually. This is made more difficult by **using different passwords for each account**. If you use one password everywhere and security fails only one of those places, it grants access to your e-mail account, website, etc, and you may not know about it or notice, before bad things happen.
+## Versioning
 
-KeePassDX is a **local password and passkey manager for Android**, which helps you **manage your passwords in a secure way**. You can put all your passwords in one database, locked with a **master key** and/or a **keyfile**. You **only have to remember one single master password and/or select the keyfile** to unlock the whole database. The databases are encrypted using the best and **most secure encryption algorithms** currently known.
+`<upstream version>-bt<fork release>` — so `4.5.2-bt1` is the first fork release on top of
+KeePassDX 4.5.2. The version code keeps upstream's numbering with the fork release in the last
+digits, so it stays ordered against upstream and leaves room for rebases onto later releases.
 
-## Small print?
+| Version | Based on | Notes |
+|---|---|---|
+| 4.5.2-bt1 | KeePassDX 4.5.2 | First release: Bluetooth keyboard auto-type |
 
-KeePassDX is under **open source GPL3 license**, meaning you can use, study, change and share it at will. Copyleft ensures it stays that way.
-From the full source, anyone can build, fork, and check whether for example the encryption algorithms are implemented correctly.
-There is **no advertising**.
+## Why this exists
 
-Do not worry, **the main features remain completely free**, no security features are reserved for a specific version; encryption and data protection are strictly the same for all users.
+Nobody in the KeePass ecosystem had shipped this. It is an open request on
+[keepass2android#607](https://github.com/PhilippC/keepass2android/issues/607) (since 2018) and
+[keepassxc#4952](https://github.com/keepassxreboot/keepassxc/issues/4952), and
+[awesome-keepass](https://github.com/lgg/awesome-keepass) lists no wireless auto-type entry at
+all.
 
-KeePassDX is developed and maintained on a volunteer basis, so if you find the application useful and would like to support its development, there are several options available.
+The pieces existed separately:
 
-## Contribution
+| Project | Types over Bluetooth without a dongle | Reads `.kdbx` |
+|---|:---:|:---:|
+| [Authorizer](https://github.com/tejado/Authorizer) | yes | no — Password Safe `.psafe3` only |
+| [KeePassDX](https://github.com/Kunzisoft/KeePassDX) | no | yes |
+| [KeePassDX-kb](https://github.com/larrylart/KeePassDX-kb) | no — needs an ESP32-S3 dongle | yes |
+| **this fork** | **yes** | **yes** |
 
-* Add features by making a **[pull request](https://help.github.com/articles/about-pull-requests/)**.
-* Help to **[translate](https://hosted.weblate.org/projects/keepass-dx/strings/)** KeePassDX to your language on [Weblate](https://hosted.weblate.org/projects/keepass-dx/).
-* **[Donate](https://www.keepassdx.com/#donation)** to encourage and finance design, deployment, ticket tracking, bug fixing, addition of new features, development and maintenance. You will then have access to a support version, KeePassDX Pro. (づ•ᴗ•)づ♡
+## How it works
 
-*Note : The support version provides access to optional visual styles that are accessible after a contribution (and a thank-you message ≽^•⩊•^≼) to encourage the work of this open source project!
-It does not improve safety and provides no functional advantage.
-If you contribute and do not have access to the styles, do not hesitate to contact the author at [contact@keepassdx.com](contact@keepassdx.com).*
+Android has supported the Bluetooth **HID Device** role since 9 (API 28), which lets an app
+present the phone to another machine as a real input device. This fork registers an SDP record
+describing a boot-protocol keyboard, converts the field value to HID scancodes for your
+computer's keyboard layout, and sends them over the interrupt channel.
 
-## Download
+To the computer it is simply a Bluetooth keyboard. Windows, macOS and Linux need no driver,
+no agent and no configuration beyond the usual Bluetooth pairing.
 
-*[F-Droid](https://f-droid.org/packages/com.kunzisoft.keepass.libre/) is the recommended way of installing, a libre software project that verifies all the libraries and app code is libre software.*
-
-| Source | Status | [Version](https://github.com/Kunzisoft/KeePassDX/wiki/FAQ#why-a-libre-and-free-version) |
-|--------|--------|---------|
-| [Google Play](https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.free) | ![Google Play Release](https://img.shields.io/endpoint?color=blue&logo=google-play&logoColor=green&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.kunzisoft.keepass.free%26gl%3DUS%26hl%3Den%26l%3DGoogle%2520Play%26m%3D%24version) | Free + [Pro](https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro) |
-| [F-Droid](https://f-droid.org/en/packages/com.kunzisoft.keepass.libre/) | ![F-Droid Version](https://img.shields.io/f-droid/v/com.kunzisoft.keepass.libre?logo=F-Droid&label=F-Droid) | Libre |
-| [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.kunzisoft.keepass.free) | ![IzzyOnDroid Version](https://img.shields.io/endpoint?&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAADAFBMVEUA0////wAA0v8A0v8A0////wD//wAFz/QA0/8A0/8A0/8A0/8A0v///wAA0/8A0/8A0/8A0/8A0//8/gEA0/8A0/8B0/4A0/8A0/8A0/+j5QGAwwIA0//C9yEA0/8A0/8A0/8A0/8A0/8A0/+n4SAA0/8A0/8A0/+o6gCw3lKt7QCv5SC+422b3wC19AC36zAA0/+d1yMA0/8A0/+W2gEA0/+w8ACz8gCKzgG7+QC+9CFLfwkA0/8A0////wAA0/8A0/8A0/8A0/+f2xym3iuHxCGq5BoA1P+m2joI0vONyiCz3mLO7oYA0/8M1Piq3Ei78CbB8EPe8LLj9Ly751G77zWQ1AC96UYC0fi37CL//wAA0/8A0////wD//wCp3jcA0/+j3SGj2i/I72Sx4zHE8FLB8zak1kYeycDI6nRl3qEA0/7V7psA0v6WzTa95mGi2RvB5XkPy9zH5YJ3uwGV1yxVihRLiwdxtQ1ZkAf//wD//wD//wD//wD//wCn5gf//wD//wD//wD//wD//wAA0/+h4A3R6p8A0/+X1w565OD6/ARg237n9csz2vPz+gNt37V/vifO8HW68B/L6ZOCwxXY8KRQsWRzhExAtG/E612a1Rd/pTBpmR9qjysduKVhmxF9mTY51aUozK+CsDSA52T//wD//wAA0////wD//wBJ1JRRxFWjzlxDyXRc0pGT1wCG0CWB3VGUzSTh8h6c0TSr5CCJ5FFxvl6s4H3m8xML0/DA5CvK51EX1N+Y2gSt4Dag3ChE3fax2ki68yO57NF10FRZnUPl88eJxhuCxgCz5EOLwEGf1DFutmahzGW98x0W1PGk3R154MHE6bOn69qv3gy92oG90o+Hn07B7rhCmiyMwECv1nO+0pQfwrCo57xF2daXsVhKrEdenQAduaee1Bsjr42z5D9RoCXy+QNovXpy2Z5MtWDO/TiSukaF3UtE1K6j3B4YwLc5wXlzpyIK0u5zy3uJqg4pu5RTpkZmpVKyAP8A0wBHcExHcEyBUSeEAAABAHRSTlP///9F9wjAAxD7FCEGzBjd08QyEL39abMd6///8P/ZWAnipIv/cC6B//7////////L/1Dz/0D///////86/vYnquY3/v///5T//v///17///////////////84S3QNB/8L/////////////7r/////NP////9l/////wPD4yis/x7Ym2lWSP+em////0n////////v///////////////////7//7pdGN3Urr6/+v/6aT////+//H/o2P/1v+7r7jp4PM/3p4g////g///K///481LxO///v////9w////8v/////9/p3J///a+P9v/5KR/+n///+p/xf//8P//wAAe7FyaAAABCZJREFUSMdj+E8iYKBUgwIHnwQ3N7cEHxcH+///VayoAE0Dh41qR7aBnCIQ8MsJKHH9/99czYYMWlA0cIkJGjMgAKfq//9RNYzIgLcBWYOTiCgDMhDn+B9bh6LebiWyH6L5UZQzONoAHWSHoqEpDkkDsyKqelv1//9rG1HUN9YihZK9AKp6BkG+/6xNqA5ajhSsCkrIipmYGGRa//9vQXVQXSySBnkWJOUMfn5Myuz/G3hR1NdEIUUchwiy+bkTsg4dbW/fu6W/e1c3XMMy5JiOZkFxUFZo74mgKTqaKXu0+2HqVwkja3BH9kFu361JwcHTfPJD4mdfe8ULAdVRyGlJAcVFfg+CQOozZ4XrJ85+JgwBsVXIGriQw5Tp4ZScezd8JiWnBupru30qwJZa+ZAjmWlC8fUZM4qB6kPnLNSPLMWqQQ5ZQ5aOzs1HmamBaQHzFs6y+qAmJCTE8f9/QgKSBg4DJPWc6zVDQkIC09JkZSPD38kukpExFpT4z67uYI/QwCOOCCK/izvu5CWl6AcEWMnKWml7LWbKZfH9/99UkknQHhGsynDz+65eWXv3/JmJrq5eXienVlRUfH/z8VvCf45soKQIH1yDEQsszrp6gwq9C73T87xcXadKl5TkFev4A/2tygmSBqYXqAYJmK+ZuoJydDR1vP09DA0NOy2kpdML81+U/heCpH1JU3jig7lJ5nKOT4i/t6ZHkqGzs4lJmIVHfrj+JR4HqLQSD0yDkCNEpGNn5ix9D03/eJdElTZdKV2TpNOhkwt8YUlNUgimgV0dLMBvf1gz1MolPd5FRcVNSkpDQ8owJeBCDyIhrIDnOD5QcuIU+3/2QKSs9laQ+noNLS0zLWdtqyP7mBAFAw88TwsJgMuJYweBGjYngtWbmeuZOW+bvNQToUFOAlFqOBk4Ov3/L7Z60/aN0p1tUhpa5nqWlub7C3p2I9QzyAghlUvczOz/1fhzPT3XSIfpSmmYAdVbmm1gV0dSz8DSilpUQsqCddIWIA3meuZaJqdMJZEzl6gRqgZIWZAxUdoizERXN8yi5MltcZTChzMaRQM3JNUWHS8rL/+yaPGvMmvr5ywoGoxtkDWwQ+Pb89ycBeWfGSJeL/la+RS1eOPnRtbQKgMRjZg+t8x6PkP273nWQAoFOPAgaeAThKXAmXMrK39Kmr5fsuBlBqoXfJGLe3VbmHjG9Mczi9T//3h7vygXtcDlQtJg44iQiIjIBRbGPO7gghPJy0ZIxT2HOLIUgwxQzsgYrUR350HSIMaJLidhgKY+mw+pflBDrX8E7OGBjPCAPc76gQFSTqAIiYrb/8dRP4CyosJ/rmwU5XIxHMilt4QBJwsSkBMClxOQULBlkRRwEONmR2kJcDGjADX2/+xO8r5iqjExqmLyrWpcPFRta1BfAwCtyN3XpuJ4RgAAAABJRU5ErkJggg==&url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.kunzisoft.keepass.free&label=IzzyOnDroid) | Free & [Libre](https://apt.izzysoft.de/fdroid/index/apk/com.kunzisoft.keepass.libre) |
-| [GitHub](https://github.com/Kunzisoft/KeePassDX/releases) / [Obtainium](https://github.com/ImranR98/Obtainium) | ![GitHub Release](https://img.shields.io/github/v/release/Kunzisoft/KeePassDX?include_prereleases&logo=GitHub&label=GitHub) | Free & Libre |
-
-## Package authenticity from GitHub
-- Download the app from [GitHub releases](https://github.com/Kunzisoft/KeePassDX/releases/latest)
-- Install [`apksigner`](https://developer.android.com/tools/apksigner) from [Android Studio](https://developer.android.com/studio)
-- Open the directory where you saved the downloaded file in the Terminal
-- Make sure that you have `apksigner` installed by running:
-```shell
-apksigner --version
 ```
-- Depending on the APK file you downloaded, run:
-
-```shell
-apksigner verify --verbose --print-certs -min-sdk-version 24 KeePassDX-*.apk
+entry field ──▶ scancodes for the chosen layout ──▶ HID reports ──▶ computer
+                                                     (paced, retried)
 ```
 
-You should get this output :
-```shell
-Verified using v2 scheme (APK Signature Scheme v2): true
-...
-Number of signers: 1
-Signer #1 certificate SHA-256 digest: 7d55b8af210381aabf960f07e17cf7857b6d2a642ca2da6bf0bdf1b200362f04
-...
-Signer #1 public key SHA-256 digest: 5d261d3176db1e077b80112824d9390167f3be0561827e42112ed6b71192db81
+## Features
+
+- **Send button on every field** — username, password, URL, custom fields and TOTP
+- **Pick the target computer at send time**, so a phone paired with several machines never
+  types a credential into the wrong one
+- **Connect → type → disconnect.** The link is not held open between sends; the phone does not
+  sit there advertising itself as a keyboard
+- **8 host keyboard layouts** — `en_US`, `en_GB`, `de_DE`, `AppleMac_de_DE`, `de_CH`, `fr_CH`,
+  `fr_FR`, `neo`
+- **Optional Enter afterwards**, to submit the form
+- **Locks with the database.** Lock, timeout or screen-off tears down the link, unregisters the
+  keyboard and zeroes the pending keystrokes
+- **Nothing is half-typed.** If the selected layout cannot produce a character, the send is
+  refused with a count rather than typing a partial password
+- Everything else in KeePassDX — clipboard, Magikeyboard, Autofill — is **untouched**
+
+## Documentation for everything else
+
+This README covers the Bluetooth keyboard feature only. Everything else — opening and syncing
+database files, Magikeyboard, Autofill, OTP, hardware keys — behaves exactly as upstream, and
+the [KeePassDX wiki](https://github.com/Kunzisoft/KeePassDX/wiki) is the reference for it. In
+particular, [File Manager and Sync](https://github.com/Kunzisoft/KeePassDX/wiki/File-Manager-and-Sync)
+explains how database files are opened and kept in sync.
+
+## Requirements
+
+- Android **9 (API 28)** or newer
+- A phone whose build actually ships the Bluetooth HID Device profile. Most do, but some
+  manufacturers omit it. Check with:
+  ```
+  adb shell getprop bluetooth.profile.hid.device.enabled
+  ```
+  The Bluetooth keyboard screen also reports when the profile is unavailable.
+
+## Usage
+
+1. **Settings → Form filling → Bluetooth keyboard**
+2. Turn on **Use a Bluetooth keyboard**
+3. Set **Computer keyboard layout** to match the *computer's* layout, not the phone's
+4. **Add a computer** and pair. Pair from here rather than from Android's Bluetooth settings —
+   the pairing has to happen in the keyboard role, and only this screen records the computer as
+   a keyboard host
+5. Open an entry and tap the send button on any field
+
+If the computer does not offer to pair, remove the phone from its Bluetooth list and tap
+**Add a computer** again.
+
+## Security notes
+
+- Keystrokes are held as a `CharArray`/`ByteArray` and zeroed after transmission, never
+  materialised as an immutable `String`
+- The pending payload lives in-process and is never placed in an `Intent` extra, which would
+  serialise a credential into a `Parcel` across a Binder
+- A send only ever transmits to the computer that request selected; another host attaching
+  mid-send is ignored
+- Passwords, scancodes and device identifiers are never logged
+- On an OTP field the generated token is typed, not the `otpauth://` URI that contains the
+  shared secret
+
+Bluetooth HID itself is only as private as the link: pairing is encrypted, but a keyboard is a
+keyboard. Do not pair with a machine you do not trust.
+
+## Credits and licensing
+
+This fork is GPL-3.0, like KeePassDX.
+
+- **[KeePassDX](https://github.com/Kunzisoft/KeePassDX)** © Jeremy Jamet / Kunzisoft — GPL-3.0.
+  The password manager this is built on.
+- **[Authorizer](https://github.com/tejado/Authorizer)** © Tjado Mäcke — GPL-3.0. The Bluetooth
+  HID transport and all eight keyboard layout tables are ported from it.
+- **Google WearMouse sample** © 2018 Google LLC — Apache-2.0. Seven files in
+  `net/tjado/bluetooth/` derive from it and keep their original headers.
+- **[amitjaju82/Authorizer @ `bluetooth-hid-autotype-fixes`](https://github.com/amitjaju82/Authorizer/tree/bluetooth-hid-autotype-fixes)**
+  — the report pacing, retry and stuck-key fix described below.
+
+Ported code keeps its original package (`net.tjado.*`) and licence headers, so its provenance
+stays auditable and upstream KeePassDX rebases do not touch it.
+
+### The stuck-key fix
+
+Sending a password of roughly 14 characters or more used to leave the last key logically
+pressed on the computer, which then auto-repeated it.
+
+`BluetoothHidDevice.sendReport()` is not a queued API. When the L2CAP interrupt channel is
+congested the stack discards the report and returns `false`, with no retransmission and no
+completion callback — and that return value was being discarded. A 14-character password is 28
+reports fired within microseconds, which is where the burst starts overrunning the channel's
+buffer quota. When the discarded report is a key-up, the computer keeps the key held.
+
+The fix, in `HidKeyboardReportSequence` and `HidReportTransmitter` (both free of Android
+dependencies so the rules are unit-testable on the JVM):
+
+- every key-down is followed by an all-keys-up report, and the sequence always terminates in
+  one, which releases modifiers too
+- reports are paced at 12 ms, derived from the keyboard QoS record the app itself advertises
+  (800 byte/s over a 9-byte bucket, and a report is 9 bytes on the wire — 11.25 ms per report)
+- the `sendReport()` result is honoured and refused reports are retried, with a larger budget
+  for key-up reports, since a lost release is the failure that causes the stuck key
+- a final all-keys-up plus a defensive repeat are sent even when the sequence is aborted
+
+22 JVM unit tests cover 5, 13, 14, 20 and 50-character sequences, repeated characters, case
+transitions, symbols, shift-heavy strings, congestion and retry, and buffer isolation. Every
+case asserts the sequence ends in an explicit all-keys-up state.
+
+## Building
+
+Standard KeePassDX build, plus the NDK for the native crypto module:
+
+- JDK 17
+- Android SDK platform 36, build-tools 36
+- **NDK 25.2.9519653** and CMake 3.22.1 (the `:crypto` module builds `aes` and `argon2` for
+  four ABIs; the build fails without it even though nothing here is native)
+
+```bash
+./gradlew :app:assembleLibreDebug
+./gradlew :app:testLibreDebugUnitTest --tests '*HidKeyboardTransmissionTest*'
 ```
-If it's the case, this means that the APK was well built by the author of KeePassDX.
 
-## Frequently Asked Questions
-
-Other questions? You can read the [FAQ](https://github.com/Kunzisoft/KeePassDX/wiki/FAQ) 
-	
-## Other devices
-
-- [KeePass](https://keepass.info/) (https://keepass.info/) is the original and official project for the desktop, with technical documentation for standardized database files. It is updated regularly with active maintenance (written in C#).
-
-- [KeePassXC](https://keepassxc.org/) (https://keepassxc.org/) is an alternative integration of KeePass written in C++.
-
-- [KeeWeb](https://keeweb.info/) (https://keeweb.info/) is a web version that is also compatible with KeePass files.
-
-## License
-
-  Copyright © 2026 Jeremy Jamet / [Kunzisoft](https://www.kunzisoft.com).
-
-  This file is part of KeePassDX.
-
-  [KeePassDX](https://www.keepassdx.com) is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  KeePassDX is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
-  
-  *This project is a fork of [KeePassDroid](https://github.com/bpellin/keepassdroid) by bpellin.*
+The application ID is `com.kunzisoft.keepass.bt`, deliberately distinct from upstream so this
+installs alongside KeePassDX and can never be mistaken for an update to it.

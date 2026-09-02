@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/bluetooth_hid_title">
+
+        <SwitchPreferenceCompat
+            android:key="@string/bluetooth_hid_enable_key"
+            android:title="@string/bluetooth_hid_enable_title"
+            android:summary="@string/bluetooth_hid_enable_summary"
+            android:defaultValue="@bool/bluetooth_hid_enable_default" />
+
+        <ListPreference
+            android:key="@string/bluetooth_hid_layout_key"
+            android:title="@string/bluetooth_hid_layout_title"
+            android:summary="%s"
+            android:dialogTitle="@string/bluetooth_hid_layout_title"
+            android:entries="@array/bluetooth_hid_layout_entries"
+            android:entryValues="@array/bluetooth_hid_layout_values"
+            android:defaultValue="@string/bluetooth_hid_layout_default"
+            android:dependency="@string/bluetooth_hid_enable_key" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/bluetooth_hid_append_enter_key"
+            android:title="@string/bluetooth_hid_append_enter_title"
+            android:summary="@string/bluetooth_hid_append_enter_summary"
+            android:defaultValue="@bool/bluetooth_hid_append_enter_default"
+            android:dependency="@string/bluetooth_hid_enable_key" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/bluetooth_hid_devices_key"
+        android:title="@string/bluetooth_hid_computers_title">
+
+        <Preference
+            android:key="@string/bluetooth_hid_scan_key"
+            android:title="@string/bluetooth_hid_scan_title"
+            android:summary="@string/bluetooth_hid_scan_summary"
+            android:persistent="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -648,6 +648,28 @@ object PreferencesUtil {
             context.resources.getBoolean(R.bool.keyboard_notification_entry_default))
     }
 
+    /* ---- Bluetooth keyboard (HID device role) ---- */
+
+    fun isBluetoothHidEnabled(context: Context): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return prefs.getBoolean(context.getString(R.string.bluetooth_hid_enable_key),
+            context.resources.getBoolean(R.bool.bluetooth_hid_enable_default))
+    }
+
+    /** Name of a net.tjado.authorizer.HidKeyboardOutput.Language constant. */
+    fun getBluetoothHidLayout(context: Context): String {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return prefs.getString(context.getString(R.string.bluetooth_hid_layout_key),
+            context.getString(R.string.bluetooth_hid_layout_default))
+            ?: context.getString(R.string.bluetooth_hid_layout_default)
+    }
+
+    fun isBluetoothHidAppendEnterEnabled(context: Context): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return prefs.getBoolean(context.getString(R.string.bluetooth_hid_append_enter_key),
+            context.resources.getBoolean(R.bool.bluetooth_hid_append_enter_default))
+    }
+
     fun isKeyboardSaveSearchInfoEnable(context: Context): Boolean {
         if (!context.isKeyboardActivatedInSettings())
             return false
@@ -951,6 +973,10 @@ object PreferencesUtil {
                 context.getString(R.string.keyboard_entry_timeout_key) -> editor.putString(name, value.toLong().toString())
                 context.getString(R.string.keyboard_save_search_info_key) -> editor.putBoolean(name, value.toBoolean())
                 context.getString(R.string.keyboard_auto_go_action_key) -> editor.putBoolean(name, value.toBoolean())
+
+                context.getString(R.string.bluetooth_hid_enable_key) -> editor.putBoolean(name, value.toBoolean())
+                context.getString(R.string.bluetooth_hid_layout_key) -> editor.putString(name, value)
+                context.getString(R.string.bluetooth_hid_append_enter_key) -> editor.putBoolean(name, value.toBoolean())
                 context.getString(R.string.keyboard_key_vibrate_key) -> editor.putBoolean(name, value.toBoolean())
                 context.getString(R.string.keyboard_key_sound_key) -> editor.putBoolean(name, value.toBoolean())
                 context.getString(R.string.keyboard_auto_switch_key) -> editor.putBoolean(name, value.toBoolean())

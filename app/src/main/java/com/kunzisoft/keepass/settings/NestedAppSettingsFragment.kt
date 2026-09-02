@@ -131,6 +131,22 @@ class NestedAppSettingsFragment : NestedSettingsFragment() {
             findPreference<Preference>(getString(R.string.credential_provider_key))?.isVisible = false
         }
 
+        // The Bluetooth HID device profile only exists from API 28, and some manufacturers
+        // omit it even above that; the screen itself reports the latter case.
+        findPreference<Preference>(getString(R.string.settings_bluetooth_hid_key))?.apply {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                isVisible = false
+            } else {
+                setOnPreferenceClickListener {
+                    // SettingsActivity implements this; nested fragments have no callback
+                    // field of their own.
+                    (activity as? MainPreferenceFragment.Callback)
+                        ?.onNestedPreferenceSelected(Screen.BLUETOOTH_HID)
+                    false
+                }
+            }
+        }
+
         findPreference<Preference>(getString(R.string.magic_keyboard_explanation_key))?.setOnPreferenceClickListener {
             context?.openUrl(R.string.magic_keyboard_explanation_url)
             false

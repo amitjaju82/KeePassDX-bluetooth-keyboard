@@ -97,4 +97,13 @@
             android:defaultValue="@bool/allow_copy_password_default"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/bluetooth_hid_title">
+        <Preference
+            android:key="@string/settings_bluetooth_hid_key"
+            android:title="@string/bluetooth_hid_title"
+            android:summary="@string/bluetooth_hid_summary"
+            android:persistent="false"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

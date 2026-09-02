@@ -25,9 +25,9 @@
     *******************
     -->
 
-    <string name="app_name" translatable="false">KeePassDX</string>
+    <string name="app_name" translatable="false">KeePassDX-BT</string>
     <string name="app_name_part1" translatable="false">KeePass</string>
-    <string name="app_name_part2" translatable="false">DX</string>
+    <string name="app_name_part2" translatable="false">DX-BT</string>
     <string name="app_name_part3" translatable="false">Pro</string>
 
     <string name="play_store_url" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
@@ -120,6 +120,39 @@
 
     <!-- Form Filling Settings -->
     <string name="settings_form_filling_key" translatable="false">settings_form_filling_key</string>
+
+    <!-- Bluetooth keyboard (HID) Settings -->
+    <string name="settings_bluetooth_hid_key" translatable="false">settings_bluetooth_hid_key</string>
+    <string name="bluetooth_hid_enable_key" translatable="false">bluetooth_hid_enable_key</string>
+    <bool name="bluetooth_hid_enable_default" translatable="false">false</bool>
+    <string name="bluetooth_hid_layout_key" translatable="false">bluetooth_hid_layout_key</string>
+    <string name="bluetooth_hid_layout_default" translatable="false">en_US</string>
+    <string name="bluetooth_hid_append_enter_key" translatable="false">bluetooth_hid_append_enter_key</string>
+    <bool name="bluetooth_hid_append_enter_default" translatable="false">false</bool>
+    <string name="bluetooth_hid_devices_key" translatable="false">bluetooth_hid_devices_key</string>
+    <string name="bluetooth_hid_scan_key" translatable="false">bluetooth_hid_scan_key</string>
+    <!-- Values must match net.tjado.authorizer.HidKeyboardOutput.Language names exactly,
+         they are resolved with Language.valueOf(). -->
+    <string-array name="bluetooth_hid_layout_values" translatable="false">
+        <item>en_US</item>
+        <item>en_GB</item>
+        <item>de_DE</item>
+        <item>AppleMac_de_DE</item>
+        <item>de_CH</item>
+        <item>fr_CH</item>
+        <item>fr_FR</item>
+        <item>neo</item>
+    </string-array>
+    <string-array name="bluetooth_hid_layout_entries" translatable="false">
+        <item>English (US)</item>
+        <item>English (UK)</item>
+        <item>Deutsch (DE)</item>
+        <item>Deutsch (DE, Apple Mac)</item>
+        <item>Deutsch (CH)</item>
+        <item>Français (CH)</item>
+        <item>Français (FR)</item>
+        <item>Neo 2</item>
+    </string-array>
 
     <string name="magic_keyboard_explanation_key" translatable="false">magic_keyboard_explanation_key</string>
     <string name="magic_keyboard_key" translatable="false">magic_keyboard_key</string>

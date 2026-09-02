@@ -36,7 +36,12 @@ abstract class NestedSettingsFragment : PreferenceFragmentCompat() {
         APPEARANCE,
         DATABASE,
         DATABASE_SECURITY,
-        DATABASE_MASTER_KEY
+        DATABASE_MASTER_KEY,
+
+        // Append new screens at the end only: the selected screen travels as Screen.ordinal
+        // in the fragment arguments, so inserting one renumbers every screen after it and
+        // stale saved state would reopen the wrong one.
+        BLUETOOTH_HID
     }
 
     fun getScreen(): Screen {
@@ -76,6 +81,7 @@ abstract class NestedSettingsFragment : PreferenceFragmentCompat() {
                 Screen.DATABASE,
                 Screen.DATABASE_SECURITY,
                 Screen.DATABASE_MASTER_KEY -> NestedDatabaseSettingsFragment()
+                Screen.BLUETOOTH_HID -> BluetoothHidSettingsFragment()
             }
             // supply arguments to bundle.
             val args = Bundle()
@@ -93,6 +99,7 @@ abstract class NestedSettingsFragment : PreferenceFragmentCompat() {
                 Screen.DATABASE -> resources.getString(R.string.menu_database_settings)
                 Screen.DATABASE_SECURITY -> resources.getString(R.string.menu_security_settings)
                 Screen.DATABASE_MASTER_KEY -> resources.getString(R.string.menu_master_key_settings)
+                Screen.BLUETOOTH_HID -> resources.getString(R.string.bluetooth_hid_title)
             }
         }
     }

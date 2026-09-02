@@ -1,0 +1,1478 @@
+KeePassDX(4.5.2)
+ * Fix PRF settings #2673
+ * Fix multiple languages #2656
+ * Fix OTP token size #2672
+ * Fix memory limits #2671
+
+KeePassDX(4.5.1)
+ * Fix Memory optimization #2666
+ * Fix OTP token not hidden by default #2665
+
+KeePassDX(4.5.0_beta06 - 4.5.0)
+ * Add Passkey PRF Extension #2502 #2553
+ * New OTP token views #1851 #2541
+ * New search animation #2541
+ * Entry icon to fill the Magikeyboard #2590 #2538
+ * Indicator for special groups #2556
+ * Autofill suggestion settings #2574
+ * 1 second benchmark #2653 #2655 #2640
+ * Fix UV and Read-only modes saving #2541
+ * Fix 32 bytes XML v2 KeyFiles #2660
+ * Refactoring / fixes #996 #1911 #2456 #2523 #2541 #2542 #2543 #2575 #2576 #2581 #2578 #2591 #2600 #2630 #2658
+
+KeePassDX(4.5.0_beta05)
+ * TargetSDK 36
+ * Update translations
+ * 1 second benchmark during database creation #2653
+ * Fix unit converter in KDF dialog #2640
+ * Fix KDF parameters #2655 #2640
+ * Fix data change indicator #2658
+ * Fix 32 bytes XML v2 KeyFiles #2660
+
+KeePassDX(4.5.0_beta04)
+ * Fix exception during template selection #2617
+ * Fix autoscrolls to TOTP section #2621
+ * Fix comparator in SortedList #2630
+ * Fix special character input in entry fields #2632
+ * Fix query packages permission in manifest #996
+ * Fix expiration during Autofill registration #2600
+ * Fix Passkey PRF registration and authentication hash #2502
+ * Fix KDF max parameters #2640
+
+KeePassDX(4.5.0_beta03)
+ * Add Passkey PRF Extension #2502 #2553
+ * Fix URL actions #2604
+ * Fix field value selection #2456
+
+KeePassDX(4.5.0_beta02)
+ * New search animation #2541
+ * Entry icon to fill the Magikeyboard #2590 #2538
+ * Refactoring #2541 #2581
+ * Fix copy actions #2541
+ * Fix OTP icon in entry list #2541
+ * Fix selection of a protected field after User Verification #2456
+ * Fix deletion of a Passkey Tag in an entry #2591
+
+KeePassDX(4.5.0_beta01)
+ * Hide OTP token #1851
+ * Indicator for special groups #2556
+ * Autofill suggestion settings #2574
+ * Fix tags #2543 #2578
+ * Fix entry actions #2523 #2541
+ * Fix sorting by access #1911
+ * Fix group icon #2542
+ * Fix OTP tags, change indicator and DB reloading #2541
+ * Fix UV and Read-only modes saving #2541
+ * Fix device unlock link when deleting database #2576
+ * Fix copy with User Verification #2575
+ * Refactoring #2541
+
+KeePassDX(4.4.5)
+ * Fix OTP tag #2570 #2571
+
+KeePassDX(4.4.4)
+ * Fix return to previous keyboard #2529
+ * Fix keyboard view update #2539
+
+KeePassDX(4.4.3)
+ * Fix a Passkey reference #2554
+ * Add browser in the list of privileged apps #2533
+ * Small fixes
+
+KeePassDX(4.4.2)
+ * Fixed duplication of UUIDs by restoring the old behavior of sorting by access #2527 #1911
+
+KeePassDX(4.4.1)
+ * Fixed a bug that prevents protected fields from being displayed on some OS with poorly implemented TextView #2524
+
+KeePassDX(4.4.0)
+ * Tags in list view #1539 #2144
+ * Search by Tags #1338 #2280
+ * Hidden Tags history #2374 #1405
+ * KDF Benchmark #784
+ * Improved accessibility #2475
+ * Improved security #2480-#2489
+ * Key file generation V2 #1934
+ * Filter browser IDs (Magikeyboard) #2466 #2394 #2400 #2317
+ * Fix for screenshot and history #2407 #2471
+ * Small fixes #2476 #2369 #1911 #2469 #2477 #2512 #2511 #2515 #2277 #2520 #2522
+
+KeePassDX(4.3.3)
+ * Fix 16 KB ELF alignment #2074
+ * Fix image viewer toolbar #2431
+ * Fix OTP display in notification #2457
+ * Fix Timeout settings #2427
+
+KeePassDX(4.3.2)
+ * Fix dialog for entry available on magikeyboard #2367
+ * Fix automatic URL and ApplicationId links #2373
+ * Fix selectable non protected field #2368
+ * Fix user verification education #2365
+ * Update icons #2361
+
+KeePassDX(4.3.1)
+ * Select User Verification mode at database opening #2321
+ * Fix reloading changed database #2334
+ * Fix selectable protected field #2345
+ * Fix password credential provider workflow #2353
+ * Fix infinite loading #2277
+ * Fix webview recognition #2348 #2343 #2349 #1716
+ * Fix Magikeyboard #2356 #2357
+ * Fix display of protected field #2350
+
+KeePassDX(4.3.0)
+ * Manual change of app language #1884 #1990
+ * Add Passkey User Verification #2283
+ * Share URL/Entry from Autofill to Magikeyboard #920 #995 #2024 #1465
+ * Improve keyboard switch #311 #643 #2305
+ * OTP notification #2301 #1347 #1558 #2316
+ * Field reference placeholders S: #2270 (@thegards)
+ * Password Credential Provider API #2139
+ * Improve Autofill recognition #553
+ * Small fixes #2289 #2277 #2068 #2288 #2276 #1793 #2282
+
+KeePassDX(4.2.4)
+ * Fix remembering database location #2262
+
+KeePassDX(4.2.3)
+ * Fix multiple Passkey selection #2253
+ * Fix database dialog subtitle #2254
+ * Fix save search info if URL present #2255
+ * Small fixes
+
+KeePassDX(4.2.2)
+ * Fix database merge algorithm #2223
+ * Fix save search info #2243
+ * Fix Play Service as privileged app for Passkey Cross Device Authentication #2244
+ * Small fixes
+
+KeePassDX(4.2.1)
+ * Fix Magikeyboard autosearch #2233
+ * Fix database merge #2223
+ * Fix dialog database action #2234
+ * Fix autofill selection #2238 #2235
+ * Small fixes
+
+KeePassDX(4.2.0)
+ * Passkeys management #1421 #2097 (@cali-95)
+ * Confirm usage of passkey #2165 #2124
+ * Dialog to manage missing signature #2152 #2155 #2161 #2160
+ * Capture error #2159 #2215
+ * Change Passkey Backup Eligibility & Backup State #2135 #2150 #2212
+ * Search settings #2112 #2181 #2187 #2204
+ * Autofill refactoring #765 #2196
+ * Small fixes #2157 #2164 #2171 #2122 #2180 #2209 #2214
+
+KeePassDX(4.1.9)
+ * Fix landscape UI #2198 #2200 (@chenxiaolong)
+ * Fix start loop and flash screen #2201
+ * Small fixes
+
+KeePassDX(4.1.8)
+ * Updated to API 35 minimum SDK 19 #2073 #2138 #2067 #2133 #1687 (Thx @Dev-ClayP)
+ * Remember last read-only state #2099 #2100 (Thx @rmacklin)
+ * Fix merge deletion #1516
+ * Fix space in search #175
+ * Fix deletable recycle bin #2163
+ * Small fixes
+
+KeePassDX(4.1.7)
+ * Fix CipherDatabase for biometric states #2119
+
+KeePassDX(4.1.6)
+ * Auto open biometric prompt from database list #2113
+ * Fix Keystore errors #2114 #2115
+ * Complete biometric refactoring for better compatibility
+
+KeePassDX(4.1.5)
+ * Fix auto prompt #2111
+
+KeePassDX(4.1.4)
+ * Fix UnlockManager #2098 #2101
+ * Auto device unlock prompt #2105
+ * Small fixes ##2066
+
+KeePassDX(4.1.3)
+ * Fix Autofill Registration #2089
+ * Fix Biometric errors #2081
+ * Fixed timestamp in copy file #1981 #1983
+ * Fix Template Email #1986
+ * Fix Search #2096
+
+KeePassDX(4.1.2)
+ * Fix URL search #1940 #1946 #2003 #2040 #2044
+ * Fix Autofill popup #2054
+ * Fix Group notes #2053
+ * Fix Dialog background #2005 #2004 (Thx @codokie)
+ * Fix OTP configuration #2042 #2065 (Thx @Dev-ClayP)
+ * Fix small UI elements #1987 #2007 (Thx @ymcx)
+ * RTL layout support #2021 (Thx @codokie)
+ * App Metadata to translation #1823
+
+KeePassDX(4.1.1)
+ * Fix date parser #1933
+ * Fix domain search #1820 #1936
+
+KeePassDX(4.1.0)
+ * Generate keyfile #1290
+ * Hide template group #1894
+ * Group count sum recursively #421
+ * Fix date fields #1695 #1710
+ * Fix distinct domain names #1105 #1820
+ * Resets the advanced unlock expiration #1600
+ * Password entropy #1490 #1355
+ * Upgrade to API 34 (Android 14) #1730
+ * Small fixes #1711 #1831 #1780 #1821 #1863 #1889 #1289 #1600 #1467 #1870
+
+KeePassDX(4.0.8)
+ * Fix graphical bug that prevented databases from being opened on some versions of Android #1848 #1850
+
+KeePassDX(4.0.7)
+ * Prevent 0 Byte file with cache during a save exception #1620 #1594 #1680
+ * Fix inline suggestions in keyboard #1840
+ * Fix broken links by default #1755
+ * Fix UX by allowing validation in entry edition #1770
+ * Fix small bugs #1709
+
+KeePassDX(4.0.6)
+ * Fix form filled recognition #1508 #1735 #1508 #1790 #1783 #1797 #1801 #1802 #1804 #1665
+ * Fix translations #1707 #1683 #1712
+ * Update APK verifier #1810
+
+KeePassDX(4.0.5)
+ * Fix form filled recognition #1572 #1508
+ * Rollback password color #1686 #1490
+
+KeePassDX(4.0.4)
+ * Fix form filled recognition #1572 #1677
+ * Fix device unlock #1682
+ * Fix password color #1490
+
+KeePassDX(4.0.3)
+ * Fix "Save as" in Read Only mode #1666
+ * Fix username autofill #1665 #530 #1572 #1426 #1523 #1556 #1653 #1658 #1508 #1667
+ * Fix regex OTP recognition #1596
+ * Change password color dynamically #1490
+ * Small fixes #1641 #1656 #1649 #1400 #1674
+
+KeePassDX(4.0.2)
+ * Fix Autofill with API 33
+
+KeePassDX(4.0.1)
+ * Fix back lock #1635 #1629 #1634
+ * Fix lock button in settings #1630
+ * Improve theme translation #1631
+
+KeePassDX(4.0.0)
+ * New UX/UI with Material 3 #1183 #1529 #1428 #1441 #1607
+ * Material You theme (follow system colors) #1469
+ * Refactoring inner code #1371
+ * Migration to API 33
+ * Cut, copy and delete from search #891 #1308 #1263
+ * Fix behaviors #1351 #874 #1327
+ * Fix bugs #1589 #1584 #1545 #1563 #1371 #1609
+
+KeePassDX(3.5.1)
+ * Fix action dialog with YubiKey challenge-response #1506
+
+KeePassDX(3.5.0)
+ * Support YubiKey challenge-response #8 #137
+ * Better exception management during database save #1346
+ * Add "Screenshot mode" setting #459 #1377 #1354 (Thx @GianpaMX)
+ * Hide clipboard sensitive text when copy entry field #1386
+ * Fix attachment download button #1401
+ * Add monochrome icon #1403 #1404 (Thx @Sandelinos)
+ * Fix lock with back button #1412 #1414 (Thx @ryg-git)
+ * Vanadium compatibility #1447 (Thx @flawedworld)
+
+KeePassDX(3.4.5)
+ * Fix custom data in group (fix KeeShare) #1335
+ * Fix device credential unlocking #1344
+ * New clipboard manager #1343
+ * Keep screen on by default when viewing an entry
+ * Change the order of the search filters
+ * Fix searchable selection
+
+KeePassDX(3.4.4)
+ * Fix crash in New Android 13 #1321
+ * Better backstack management for selection mode
+ * Prevent Tapjacking #1318
+ * Small changes #1298
+
+KeePassDX(3.4.3)
+ * Remove "Select share info" setting for Magikeyboard #1304
+ * Fix quick search and better loadGroup implementation #1302
+ * Fix small bugs
+
+KeePassDX(3.4.2)
+ * Fix service parameter and workflow to remove notification when service is killed
+ * Fix color
+
+KeePassDX(3.4.1)
+ * Fix search mode with Magikeyboard #1292
+ * Fix select another entry with Magikeyboard #1293
+ * Fix unexpected lock with Magikeyboard #1294
+ * Small UI changes
+
+KeePassDX(3.4.0)
+ * Passphrase implementation #218
+ * Show visual password strength indicator with entropy #631 #869 #454 #1270
+ * Dynamically save password generator configuration #618 #696
+ * Add advanced password filters #1052 #448 #983 #271 #539
+ * Better search implementation #175 #1254 #1267
+ * Manage package name from Magikeyboard #1010 #1261
+ * Ask confirmation to lock if changes without save #970
+ * Fix small bugs #1282
+
+KeePassDX(3.3.3)
+ * Fix shared otpauth link if database not open #1274
+ * Ellipsize attachment name #1253
+ * Add a warning to inform about KeyStore usage #1269
+ * Fingerprint unlock no more by default #1273
+ * Tabs to show main and advanced content separately
+ * Fix URL color
+
+KeePassDX(3.3.2)
+ * Merge KeePassDX & KeePassDX Pro #1257
+ * Create new Contributor Pro app
+
+KeePassDX(3.3.1)
+ * Fix Japanese keyboard in search #1248
+ * Better OOM management #256
+ * Fix filters #1249
+ * Fix temp advanced unlocking #1245
+ * Best autofill recognition #1250
+ * Workaround to fill OTP token in multiple fields with Magikeyboard (long press) #1158
+
+KeePassDX(3.3.0)
+ * Quick search and dynamic filters #163 #462 #521
+ * Keep search context #1141
+ * Add searchable groups #905 #1006
+ * Search with regular expression #175
+ * Merge from file and save as copy #1221 #1204 #840
+ * Fix custom data #1236
+ * Fix education hints #1192
+ * Fix save and app instance in selection mode
+ * New UI and fix styles
+ * Add "Simple" and "Reply" themes
+
+KeePassDX(3.2.0)
+ * Manage data merge #840 #977
+ * Manage Tags #633
+ * Inherit colors and icon from template #1213 #1130
+ * Entry colors setting #1207
+ * Setting to keep the screen on when watching the entry #1119
+ * Add path in quick search
+ * Small fixes
+
+KeePassDX(3.1.0)
+ * Add breadcrumb
+ * Add path in search results #1148
+ * Add group info dialog #1177
+ * Manage colors #64 #913
+ * Fix UI in Android 8 #509
+ * Upgrade libs and SDK to 31 #833
+ * Fix parser of database v1 #1201
+ * Stop asking WRITE_EXTERNAL_STORAGE permission
+
+KeePassDX(3.0.4)
+ * Fix autofill inline bugs #1173 #1165
+ * Small UI change
+
+KeePassDX(3.0.3)
+ * Change default Argon2 parameters #1098
+ * Add & edit custom icon name #976
+ * Fix templates #1128 #1133 #1138
+ * Update Autofill compatibility list #725 #1154
+ * Improve fingerprint usage #1137 #1145
+ * Change backup configuration #1144
+ * Add lock button in database notification
+
+KeePassDX(3.0.2)
+ * Samsung DeX mode #1114 #245 (Thx @chenxiaolong)
+
+KeePassDX(3.0.1)
+ * Fix text size and smallest margin #1085
+ * Fix number of lines during an edition #1073
+ * Fix Magikeyboard URL auto action #1100
+ * Fix exception after group name change and save #1112
+ * Fix timeout reset #1107
+ * Fix search actions #1091 #1092
+ * Small changes #1106 #1085
+
+KeePassDX(3.0.0)
+ * Add / Manage dynamic templates #191
+ * Manually select RecycleBin group and Templates group #191
+ * Setting to display OTP Token in list #655
+ * Fix timeout in dialogs #716
+ * Check URI permissions #626
+ * Better autofill implementation #943 #946 #984 #1070 (Thx @uduerholz)
+ * Improvements #680 #1035 #1043 #942 #1021 #1027 #1046 #1082 #1083 (Thx @chenxiaolong)
+
+KeePassDX(2.10.5)
+ * Increase the saving speed of database #1028
+ * Fix advanced unlocking by device credential #1029
+
+KeePassDX(2.10.4)
+ * Hot fix to increase the opening speed of database #1028
+
+KeePassDX(2.10.3)
+ * Improve Magikeyboard options description #1022 #1023 (Thx @djibux)
+ * Fix database opened without notification (database is now closed when screen is killed in background #1025)
+ * Fix biometric prompt #1018
+
+KeePassDX(2.10.2)
+ * Fix search fields references #987
+ * Fix Auto-Types with same key #997
+
+KeePassDX(2.10.1)
+ * Fix parcelable with custom data #986
+
+KeePassDX(2.10.0)
+ * Manage new database format 4.1 #956
+ * Fix show button consistency #980
+ * Fix persistent notification #979
+
+KeePassDX(2.9.20)
+ * Fix search with non-latin chars #971
+ * Fix action mode with search #972 (rollback ignore accents #945)
+ * Fix timeout with 0s #974
+
+KeePassDX(2.9.19)
+ * Fix search slowdown #964
+ * Fix closing notification after lock request #965
+ * Better temp advanced unlocking code implementation #965
+ * Fix OTP token generation #967
+
+KeePassDX(2.9.18)
+ * Move groups #658
+ * Improve autofill recognition #960
+ * Remove diacritical marks in search string #945
+ * Fix search in references #962
+ * Fix themes in Libre version
+
+KeePassDX(2.9.17)
+ * Import / Export app properties #839
+ * Force twofish padding compatibility #955
+ * Better timeout preference #579
+
+KeePassDX(2.9.16)
+ * Fix small bugs #948
+
+KeePassDX(2.9.15)
+ * Fix themes #935 #926
+ * Decrease default clipboard time #934
+ * Better opening performance #929 #933
+ * Fix memory usage setting #941
+
+KeePassDX(2.9.14)
+ * Add custom icons #96
+ * Dark Themes #532 #714
+ * Fix binary deduplication #715
+ * Fix IconId #901
+ * Resize image stream dynamically to prevent slowdown #919
+ * Small changes #795 #900 #903 #909 #914
+
+KeePassDX(2.9.13)
+ * Binary image viewer #473 #749
+ * Fix TOTP plugin settings #878
+ * Allow Emoji #796
+ * Scroll and better UI in entry edition screen #876
+ * Better UI #876
+ * Fix themes and add Purple Dark #889
+ * Allow OTP with many padding #585
+ * Add notes in groups #734
+
+KeePassDX(2.9.12)
+ * Fix OTP token type #863
+ * Fix auto open biometric prompt #862
+ * Fix back appearance setting #865
+ * Fix orientation change in settings #872
+ * Change memory unit to MiB #851
+ * Small changes #642
+
+KeePassDX(2.9.11)
+ * Add Keyfile XML version 2 (fix hex) #844
+ * Fix hex Keyfile #861
+
+KeePassDX(2.9.10)
+ * Try to fix autofill #852
+ * Fix database change dialog displayed too often #853
+
+KeePassDX(2.9.9)
+ * Detect file changes and reload database #794
+ * Inline suggestions autofill with compatible keyboard (Android R) #827
+ * Add Keyfile XML version 2 #844
+ * Fix binaries of 64 bytes #835
+ * Special search in title fields #830
+ * Priority to OTP button in notifications #845
+ * Fix OTP generation for long secret key #848
+ * Fix small bugs #849
+
+KeePassDX(2.9.8)
+ * Fix specific attachments with kdbx3.1 databases #828
+ * Fix small bugs
+
+KeePassDX(2.9.7)
+ * Remove write permission since Android 10 #823
+ * Fix small bugs
+
+KeePassDX(2.9.6)
+ * Fix KeyFile bug #820
+
+KeePassDX(2.9.5)
+ * Unlock database by device credentials (PIN/Password/Pattern) with Android M+ #102 #152 #811
+ * Prevent auto switch back to previous keyboard if otp field exists #814
+ * Fix timeout reset #817
+
+KeePassDX(2.9.4)
+ * Fix small bugs #812
+ * Argon2ID implementation #791
+
+KeePassDX(2.9.3)
+ * Unlock database by device credentials (PIN/Password/Pattern) #779 #102
+ * Advanced unlock with timeout #102 #437 #566
+ * Remove default database parameter when the file is no longer accessible #803
+ * Move OTP button to the first view level in Magikeyboard #587
+ * Tooltips for Magikeyboard #586
+ * Fix small bugs #805
+
+KeePassDX(2.9.2)
+ * Managing OTP links from QR applications #556
+ * Prevent manual creation of existing field name #718
+ * Harmonization of field names #789
+ * Different channels for each type of notification #688
+ * Fix OTP #780 #781
+ * Fix same save shared info #783
+ * Fix switch back to previous keyboard #782
+ * Fix read only #792
+ * Better UI #719 #534 #617 #793
+
+KeePassDX(2.9.1)
+ * Copy password from generator #697
+ * Fix Magikeyboard not fully visible #772
+ * Fix change font size #770
+ * Fix crash #774
+ * Small fixes #771
+
+KeePassDX(2.9)
+ * Upgrade to Android API 30 #723
+ * Save new credentials with Autofill #524
+ * Setting to close database after Autofill selection #755
+ * Setting to switch keyboard when database is locked #625
+ * Fix biometric issues #724 #740 #731
+ * Fix autofill #725 #551
+ * Fix subdomain search #728
+ * Fix backup search #759
+ * Small fixes and translations #732 #736 #737 #738 #742 #767
+
+KeePassDX(2.8.7)
+ * Downgrade to Android API 29 (crash on startup with API 30 on some devices)
+ Sorry for the inconvenience
+
+KeePassDX(2.8.6)
+ * Fix Autofill recognition #712
+ * Keep value after renaming custom field #709
+ * Prevent random binary bug #713
+ * Fix dialog background #717
+ * Better domain recognition for autofill #702
+ * Write custom data #651
+ * Fix autolink #720
+
+KeePassDX(2.8.5)
+ * Fix Base 64 #708
+
+KeePassDX(2.8.4)
+ * Fix incomplete attachment deletion #684
+ * Fix opening database v1 without backup folder #692
+ * Fix ANR during first entry education #685
+ * Entry edition as fragment and manual views to fix focus #686
+ * Fix opening database with corrupted attachment #691
+ * Manage empty keyfile #679
+
+KeePassDX(2.8.3)
+ * Upload attachments
+ * Visibility button for each hidden field
+ * Fix read header file
+ * Fix deletion in KDB database
+ * Fix minor issues
+
+KeePassDX(2.8.2)
+ * Fix themes / new UI
+ * Fix multiples notifications
+ * Fix entry in Magikeyboard memory
+ * Fix biometric view visibility
+ * Fix fields order
+ * Upgrade code with ViewModel and LiveData
+
+KeePassDX(2.8.1)
+ * Capture exceptions in coroutines
+
+KeePassDX(2.8)
+ * Fix TOTP period (> 60s)
+ * Fix searching in recycle bin
+ * Settings to back to the previous keyboard during database credentials and after form filling
+ * Improve action tasks
+ * Improve recognition to reset app timeout
+ * Fix minor issues
+
+KeePassDX(2.7)
+ * Add blocklists for autofill
+ * Add autofill compatibility mode (usefull for Browser not compatible)
+ * Upgrade autofill recognition algorithm
+ * Setting to search through web subdomains
+ * Refactoring selection mode
+
+KeePassDX(2.6)
+ * Share a web domain to automatically search for an entry
+ * Default group icon for a new entry
+ * Better autofill recognition
+ * Fix entry not visually deleted in search
+ * Fix hanged loading dialog
+ * Fix auto open biometric prompt if comes from background
+ * Minor fixes
+
+KeePassDX(2.5)
+ * First stable version of KeePassDX
+ * Fork completely rewritten from the KeePassDroid project
+ * Fix small issues from the last Release Candidate
+
+KeePassDX(2.5RC2)
+ * Replacement of Spongy Castle by Bouncy Castle
+ * Update Autofill compatibility
+ * Fix Magikeyboard "Go" action
+ * Fix KeeWeb database opening
+ * Fix default username
+ * Fix themes
+ * Fix small issues
+
+KeePassDX(2.5RC1)
+ * Add write permission to keep compatibility with old file managers
+ * Fix autofill for apps
+ * Auto search for autofill
+ * New keyfile input
+ * Icon to hide keyfile input
+ * New lock button
+ * Setting to hide lock button in user interface
+ * Clickable links in notes
+ * Fix autofill for key-value pairs
+
+KeePassDX(2.5beta30)
+ * Fix Lock after screen off (wait 1.5 seconds)
+ * Upgrade autofill algorithm
+ * Fix ANR during file verifications
+
+KeePassDX(2.5beta29)
+ * Upgrade autofill algorithm
+ * Delete registered KeyFile after save new credentials
+ * Fix title and username entry view refresh after an update
+ * Fix database lock request (open notification always active)
+ * Allow empty title in entries
+ * Add expiration datetime
+
+KeePassDX(2.5beta28)
+ * Fix read only database
+ * Upgrade to Android SDK 29
+
+KeePassDX (2.5beta27)
+ * New setting to hide broken links
+ * Show URL when title is empty
+ * Setting to open search field at database opening
+ * Fix settings for database locations
+ * Fix error message when database file not writable
+ * Fix appearance refresh settings
+ * Sort optimization
+
+KeePassDX (2.5.0.0beta26)
+ * Download attachments
+ * Change file size string format
+ * Prevent screenshot for all screen
+ * Auto performed "Go" key in Magikeyboard
+ * Restore and delete entry history
+ * Setting to hide expired entries
+ * New Black theme
+ * Fix crash when clearing clipboard
+ * Fix attachments compressions
+ * Fix dates
+ * Fix UUID message for Database v1
+
+KeePassDX (2.5.0.0beta25)
+ * Setting for Recycle Bin
+ * Fix Recycle bin issues
+ * Fix TOTP
+ * Fix infinite save
+ * Fix update group
+ * Fix OOM
+
+KeePassDX (2.5.0.0beta24)
+ * Add OTP (HOTP / TOTP)
+ * Add settings (Color, Security, Master Key)
+ * Show history of each entry
+ * Auto repair database for nodes with same UUID
+ * Management of expired nodes
+ * Multi-selection for actions (Cut - Copy - Delete)
+ * Open/Save database as service / Add persistent notification
+ * Fix settings / edit group / small bugs
+
+KeePassDX (2.5.0.0beta23)
+ * New, more secure database creation workflow
+ * Recognize more database files
+ * Add alias for history files (WARNING: history is erased)
+ * New Biometric unlock (Fingerprint with new API)
+ * Fix entry references
+ * Fix OOM with KeyFile
+ * Fix small issues
+
+KeePassDX (2.5.0.0beta22)
+ * Rebuild code for actions
+ * Add UUID as entry view
+ * Fix bug with natural order
+ * Fix number of entries in databaseV1
+ * New entry views
+
+KeePassDX (2.5.0.0beta21)
+ * Fix nested groups no longer visible in V1 databases
+ * Improved data import algorithm for V1 databases
+ * Add natural database sort
+ * Add username database sort
+ * Fix button disabled with only KeyFile
+ * Show the number of entries in a group
+
+KeePassDX (2.5.0.0beta20)
+ * Fix a major bug that displays an entry history
+
+KeePassDX (2.5.0.0beta19)
+ * Add lock button always visible
+ * New connection workflow
+ * Code refactored in Kotlin
+ * Better notification implementation
+ * Better views for large screen
+ * Magikeyboard enhancement
+ * Fix Recycle Bin
+ * Fix memory when load database
+ * Fix small bugs
+
+KeePassDX (2.5.0.0beta18)
+ * New recent databases views
+ * New information dialog
+ * Custom fields for the Magikeyboard
+ * Timeout for the Magikeyboard
+ * Long press for keyboard selection
+ * Fix memory when opening the database
+ * Memory management for attachments
+
+KeePassDX (2.5.0.0beta17)
+ * Fix font and search
+
+KeePassDX (2.5.0.0beta16)
+ * New search in a single fragment
+ * Search suggestions
+ * Added the display of usernames
+ * Added translations
+ * Fix read-only mode
+ * Fix parcelable / toolbar / back
+
+KeePassDX (2.5.0.0beta15)
+ * Read only mode
+ * Best group recovery for the navigation fragment
+ * Fix copies in notifications
+ * Fix orientation
+ * Added translations
+
+KeePassDX (2.5.0.0beta14)
+ * Optimize all the memory with parcelables / fix search
+
+KeePassDX (2.5.0.0beta13)
+ * Fix memory issue with parcelable (crash in beta12 version)
+
+KeePassDX (2.5.0.0beta12)
+ * Added the Magikeyboard to fill the forms (settings still in development)
+ * Added move and copy for groups and entries
+ * New navigation in a single screen / new animations between activities
+ * New icons for the material pack / vectorization
+ * New adaptive launcher icon
+ * Icons depends now of setting of list items
+ * Added a setting to disable the open button when no password is identified
+ * Added a setting to disable the education screens
+ * Added a setting to disable the copy of protected custom fields
+ * Fix the fingerprint recognition (WARNING : The keystore is reinit, you must delete the old keys)
+ * Fix small bugs
+
+KeePassDX (2.5.0.0beta11)
+ * Fix crash in beta10 version
+
+KeePassDX (2.5.0.0beta10)
+ * Dynamically change Algorithm and Key Derivation Function in settings
+ * Upgrade translations
+ * New red volcano theme, fix classic dark theme
+ * Add Material Icon Pack to the Free version
+ * Update fingerprint state with checkbox
+ * Fix bugs
+
+KeePassDX (2.5.0.0beta9)
+ * Education Screens to learn how to use the app
+ * New designs
+ * New custom font for character visibility
+ * New themes
+ * New icon pack
+ * Change setting organisation
+ * Pro version
+
+KeePassDX (2.5.0.0beta8)
+ * Hide custom entries protected
+ * Best management of field references (https://KeePass.info/help/base/fieldrefs.html)
+ * Change database / default settings
+ * Add Autofill for search
+ * Add sorting by last access and by creation time
+ * Rebuild custom entries
+ * Refactor old code
+ * Fix bugs
+
+KeePassDX (2.5.0.0beta7)
+ * Rebuild Notifications
+ * Change links to https
+ * Add extended Ascii (ñæËÌÂÝÜ...)
+ * Upgrade custom visibility font
+ * Best fingerprint error management
+ * Add setting to prevent the password copy
+ * Fix bugs
+
+KeePassDX (2.5.0.0beta6)
+ * Fix crash
+
+KeePassDX (2.5.0.0beta5)
+ * Autofill (Android O)
+ * Deletion for group
+ * New sorts with (Asc/Dsc, Groups before or after)
+ * Better permission management with dialog at runtime
+ * Setting to change font of field (monospace for a better visibility)
+ * Open kdbx and kdb files from file browser
+ * Change sort of fields
+ * Hide empty fields
+ * Add copy button for Username / Password and extra field
+ * Add 5, 10, 20 seconds and 15 minutes of clipboard timeout
+ * Hide "show password" icon when password not present
+ * New animations for add button
+ * New list to add and delete node with animation
+ * Change view for better cohesion
+ * Upgrade translations
+ * Fix crash for API < Kitkat
+ * Fix fingerprint bugs
+ * Fix many small bugs
+ * Add recycle bin setting (not yet accessible)
+
+KeePassDX (2.5.0.0beta4)
+ * Show only file name
+ * Setting for full path
+ * Add information for each database file
+ * Setting to delete fingerprints
+ * Solve bugs when change fingerprint
+ * Delete view assignment for fingerprint opening
+ * Merge KeePassDroid 2.2.1
+
+KeePassDX (2.5.0.0beta3)
+ * New database workflow with new screens and folder selection
+ * Settings for default password generation
+ * Fingerprint dialog for explanations
+ * Setting to disable fingerprint
+ * Directly opening kdbx file
+ * Setting to disable notifications
+ * Setting to lock database when screen is shut off
+ * Merge KeePassDroid 2.2.0.9
+ * Add corruption fix mode
+
+KeePassDX (2.5.0.0beta2)
+ * Remove libs for F-Droid
+
+KeePassDX (2.5.0.0beta1)
+ * Fork KeePassDroid
+ * Add Material Design
+ * Add Light and Night theme
+ * Min API is 14
+ * Solve bug for fingerprint
+ * Update French translation
+ * Change donation (see KeePassDroid to contribute on both projects)
+
+KeePassDroid (2.2.1)
+ * Fix kdbx4 date corruption
+ * Updated German translations
+
+KeePassDroid (2.2.0.9)
+ * Update build tools version to workaround CM/Lineage bug (closes: #249)
+ * Update Russian translations
+ * Update Polish translations
+
+KeePassDroid (2.2.0.8)
+ * Add corruption fix mode
+ * Update Hungarian translations
+
+KeePassDroid (2.2.0.7)
+ * Fix KDBX3 encryption rounds corruption
+ * Fix KDBX4 attachement crashes
+
+KeePassDroid (2.2.0.6)
+ * Add additional ndk ABIs
+
+KeePassDroid (2.2.0.5)
+ * Don't show fingerprint prompt on devices without fingerprint hardware
+ * Fix dateformat crashes
+
+KeePassDroid (2.2.0.4)
+ * Fingerprint fixes
+
+KeePassDroid (2.2.0.3)
+ * Search crash fix
+ * Improve fingerprint handling
+
+KeePassDroid (2.2.0.2)
+ * Fix non fingerprint password layout
+
+KeePassDroid (2.2.0.1)
+ * Small fingerprint fixes
+
+KeePassDroid (2.2.0.0)
+ * Add Fingerprint integration
+
+KeePassDroid (2.1.0.0)
+ * Add support for KDBXv4 (used in mainline KeePass >= 2.35)
+ * Updated Lithuanian translations
+ * Updated Russian translations
+ * Updated French translations
+ * Add Samsung multi-window support
+
+KeePassDroid (2.0.6.4)
+ * Expose Storage Access Framework option
+
+KeePassDroid (2.0.6.3)
+ * Fix various crashes
+
+KeePassDroid (2.0.6.2)
+ * Fix launch immediately from nfd
+ * Updated German translations from MaDill
+ * Add Portugese (Portugal) translations from YSmhXQDd6Z
+ * Add Lithuanian translations from zygimantus
+
+KeePassDroid (2.0.6.1)
+ * Fix crash in URI to file mapping
+
+KeePassDroid (2.0.6)
+ * Improve file URI handling
+ * Improve Android N compatibility
+
+KeePassDroid (2.0.5)
+ * Add .kdbx Twofish support from drizzt
+ * Improve password generator randomness
+ * Handle new Google Drive style links (closes: #74)
+ * Fix crash on initial .kdbx entry.
+ * Don't return to file list after creating databases.
+
+KeePassDroid (2.0.4)
+ * Fix notification icons (closes: #60)
+ * Add warning about non-Latin1 characters (closes: #64)
+ * Add support for creating .kdbx databases, make this the default
+
+KeePassDroid (2.0.3)
+ * Improve password font handling. Handle failure to load font gracefully
+ * Work around device bugs with FLAG_SECURE
+ * Shorter English text for Show/hide password, so it fits on the action bar 
+     on more phones.
+
+KeePassDroid (2.0.2)
+ * Fix crash on incorrect password (closes: #776)
+
+KeePassDroid (2.0.1)
+ * Fix Greek translations
+ * Updated Russian translations from filimonic
+ * Update Spanish translations (closes: #766)
+ * Update Czech translations (closes: #743)
+ * New password font (closes: #451)
+ * Initial material design updates
+ * Prevent screenshots/recent apps preview of password screens
+     (closes: 680, 756)
+ * Fix native encryption libraries on 64-bit devices
+
+KeePassDroid (2.0)
+ * Remove beta warning
+ * Fix download URLs
+ * Add Hebrew translations from Arthur Zamarin
+ * Updated German translations from MaDill
+ * Updated French translations from Bruno Parmentier
+ * Updated Danish translations from Frederik Svarre
+ * Add Greek translations from RaptorTFX
+
+KeePassDroid (1.99.11)
+ * Add support for decoding field references (closes: #247)
+ * Remove bad asserts (closes: #606)
+ * Add Latvian translations from Raimonds
+ * Add Basque translations from dgarciabad
+ * Polish transalation fix
+ * Responsiveness improvements
+ * Better support for read-only database files
+ * Output header hash for .kdb files
+
+KeePassDroid (1.99.10)
+ * Fix crashes on SELinux enabled devices
+
+KeePassDroid (1.99.9)
+ * Fix crashes on some Android 4.3 and x86 devices
+
+KeePassDroid (1.99.8)
+ * Fix crash in filename lookup
+ * Implement SecureRandom workaround
+
+KeePassDroid (1.99.7.2)
+ * Even better fix for recent file history
+ 
+KeePassDroid (1.99.7.1)
+ * Fix Force Close when recent file history is disabled (closes: #539)
+
+KeePassDroid (1.99.7)
+ * Don't require OI Filemanager before checking for another file manager
+ * Fix issues with file history (closes: #526)
+ * Updated Russian translations from I Nedoboy (closes: #524)
+ * Updated Finnish translations Mika Takala
+
+KeePassDroid (1.99.6)
+ * Fix off by one error on .kdb dates (closes: #518)
+ * Updated Russian translations from I Nedoboy (closes: #517)
+ * Use Sharedpreference to store recent files instead of sqlite dbs.
+   I see too many hard to explain crashes coming from the recent file
+   history dbs.
+ * Add setting to control remembering recent files list (closes: #444)
+ * Add new intents to auto-launch database with password
+ * Enable password changes on .kdbx
+
+KeePassdDroid (1.99.5)
+ * Support more generic file picker intents
+ * Better search implementation (respects .kdbx group search setting)
+ * Allow deleting .kdbx entries
+ * Fix some crashes
+ * Update Finnish translations.
+ * Update Hungarian translations
+
+KeePassDroid (1.99.4)
+ * New Swedish translation from Niclas Burgren
+ * Allow adding entries to .kdbx root group (closes: #490)
+ * Fix .kdb icon corruption bug (leads to KeePassX segfault)
+   (closes: #492)
+
+KeePassDroid (1.99.3)
+ * Updated German translations from Meviox
+ * Add Finnish translations from Mika Takala
+ * Add workaround for broken HTC Linkify
+ * Fix .kdbx max items field
+ * Fix compressed binary corruption (closes: #486)
+
+KeePassDroid (1.99.2)
+ * Fix crash on entries without icons set (closes: #484) 
+ * Prevent crash and show warning for Samsung clipboard error
+   (closes: #436)
+
+KeePassDroid (1.99.1)
+ * Add support for editing advanced strings in .kdbx files
+ * Add ability to create new groups in .kdbx files
+ * Password generator improvements from Dirk Bergstrom
+ * Add support for adding new entries and editing entries in .kdbx files
+   (closes: #144)
+ * Update Catalan translations (closes: #445)
+ * Trim whitespace from queries from josefwells (closes: #467)
+ * Updated French transaltions from Nam
+
+KeePassDroid (1.9.18.3)
+ * Restore the timeout service, we need it to keep the app in memory long
+   enough to clear the clipboard and to remove the notifications.
+ * Autolink comment and advanced fields
+ * i18n more database error strings
+ * Updated Russian translations from I Nedoboy
+ * New Catalan translations from Oriol Garrote
+ * Remove eye icon on Android >3.0 devices
+ * Fix logic for when to display the words Show Password vs. Hide Password
+
+KeePassDroid (1.9.18.2)
+ * Updated Dutch translations from Erik Jan Meijer
+ * Updated Russian translations from I Nedoboy
+ * Add Danish translations from Frederik Svarre
+
+KeePassDroid (1.9.18.1)
+ * Fix crash with blank icons
+
+KeePassDroid (1.9.18)
+ * Add input types to entry fields
+ * Show username in the title list for TAN entries
+ * Switch to monospace font for password fields
+ * Implement action bar on entry edit activity
+ * Updated Russian translations from I Nedoboy
+
+KeePassDroid (1.9.17)
+ * Updated Russian translations from I Nedoboy
+ * New Spanish translations from jipanos
+ * New Dutch translations Erik Fdevriendt
+ * Fix header verification in .kdbx
+ * Rework timeout implementation should fix some bugs with passwords persisting
+
+KeePassDroid (1.9.16)
+ * Updated Hungarian translations from intel
+ * Updated German translations from rvs2008
+
+KeePassDroid (1.9.15)
+ * Fix compatibility with desktop KeePass 2.20
+ * Verify header integrity of .kdbx databases
+
+KeePassDroid (1.9.14)
+ * Resolve crashes when switch back to the entry view
+ * Start making use of action bar on devices with Android >= 3.0
+ * Updated Russian translations from I Nedoboy
+ * Fix Czech translations
+
+KeePassDroid (1.9.13)
+ * Allow keys with 0 encryption rounds
+ * Czech translations from H Vanek
+ * Updated Russian translations from I Nedoboy
+ * Clarify text on notification pop-ups
+ * Fix text selection in entries on devices with Android >= 3.0
+
+KeePassDroid (1.9.12.1)
+ * Add title bar on Honeycomb+ devices, so ... menu is always available
+
+KeePassDroid (1.9.11)
+ * Protect against crashes when clicking on the browse icon
+ * Add Hungarian translations from intel
+
+KeePassDroid (1.9.10)
+ * Add support for the Holo theme on devices > 3.0 from Space Cowboy
+ * Add Ukranian translations from andriykopanytsia
+ * Add Portugese translations from Carlos Schlyter
+ * Japanese translation corrections from Matsuu Takuto
+ * Fix x86 key generation compatibility
+ * Add 2 thread support to key generation for dual core devices from 
+     Mike Mohr
+ * Use memory more efficiently in main group view. Prevent out of memory
+   crashes when scrolling.
+
+
+KeePassDroid (1.9.9)
+ * Go back to explicitly storing blank fields in the database
+   (works around bug in KeePassx)
+ * Add support for native code on MIPS architectures
+ * Adding Vibrate permission. On some devices notifications fail
+   without the vibrate permission.
+
+KeePassDroid (1.9.8)
+ * Fix crashes related to saving missing entries
+ * Fix issues with setting wrong expiry date
+
+KeePassDroid (1.9.7)
+  * Add Slovak translation from Typhoon
+  * Italian translation updates.
+  * iOS KeePass compatibility improvements:
+	  * Handle blank dates gracefully
+	  * Prevent crash on saving when data is missing.
+	  * Don't crash when opening menu in the Entry activity if there is no URL
+	  * Don't crash when building search index
+
+KeePassDroid (1.9.6)
+  * Fix file association errors for paths with '.'s. (Will now match paths
+    with up to 10 dots)
+  * Update Norwegian Nynorsk translations
+  * Add new icons and market graphics (thanks to Hadley)
+
+KeePassDroid (1.9.5)
+  * Update Norwegian Nynorsk translations
+  * Resize custom icons
+
+KeePassDroid (1.9.4)
+  * Add Japanese translations from Masahiro Inamura
+  * Fix issue 183 and 199 from Riksa
+  * Change search to work in memory
+
+KeePassDroid (1.9.3.1)
+  * Update Italian translations
+
+KeePassDroid (1.9.3)
+  * New setting to omit backup and recycle bin entries (based on contribution
+    from ABGH)
+  * Support databases from KeePass 1.20 (closes: #197)
+  * Handle spaces correctly when browsing for keyfiles (closes: #163)
+  * Don't clear password when browsing for a keyfile (closes: #166)
+  * Fix problems with remembering the keyfile location (closes: #167)
+
+KeePassDroid (1.9.2)
+  * Fix date display in .kdbx entries
+  * Support .kdbx format changes in KeePass 2.15
+  * Move dates to the bottom of the entry view
+
+KeePassDroid (1.9.1)
+  * Don't default to missing files
+  * Search the username field
+  * Respect mask password setting in the edit entry activity
+  * Pad entries in recent filename list
+
+KeePassDroid (1.9)
+  * New entry view design
+  * Show custom strings in .kdbx databases
+  * Fix expiry date in .kdbx databases
+
+KeePassDroid (1.8.6.4)
+  * Update Chinese translations
+  
+KeePassDroid (1.8.6.3)
+  * Fix db saving issue
+  
+KeePassDroid (1.8.6.2)
+  * Add Chinese translations
+  
+KeePassDroid (1.8.6)
+  * New native crypto implementation
+  
+KeePassDroid (1.8.5.1)
+  * Update Polish translation
+  
+KeePassDroid (1.8.5)
+  * Add default database checkbox
+  
+KeePassDroid (1.8.4)
+  * Fix crash on saving new entries
+  
+KeePassDroid (1.8.3)
+  * Guard against crash when loading icons
+  * Handle spaces correctly from file browser
+  
+KeePassDroid (1.8.2)
+  * Support Android 2.2 backup manager
+  * Add Polish translations
+  * Only show notifications if username and password exist
+  * Keep icons on entry update
+
+KeePassDroid (1.8.1)
+  * Android 1.5 compatibility fixes
+
+KeePassDroid (1.8)
+  * Layout updates
+  * Custom icon support
+  
+KeePassDroid (1.7.2)
+  * Password generator from Tolga Onbay
+  
+KeePassDroid (1.7.1)
+  * Fix timeout locking
+  
+KeePassDroid (1.7)
+  * Add icon support from Tobias Selig
+  
+KeePassDroid (1.6.3)
+  * Search tweaks from Johan Berts
+  
+KeePassDroid (1.6.2)
+  * Fix layout issues on Android 1.5
+  
+KeePassDroid (1.6.1)
+  * Add file browser for keyfiles
+  * Add missing sdcard warning
+  * Fix binary 64-bit keyfiles
+
+KeePassDroid (1.6)
+  * Add setting to control timeout duration.
+  * Add file browser
+
+KeePassDroid (1.5.9)
+  * Bump target sdk to 8
+  * Allow install to sdcard
+
+KeePassDroid (1.5.8)
+  * Update Russian translations
+  * Add Nynorsk translations
+  * Fix no compression .kdbx files
+  
+KeePassDroid (1.5.7)
+  * KeePass 2.11 compatibility fixes
+
+KeePassDroid (1.5.6)
+  * Keyfile Fix
+
+KeePassDroid (1.5.5)
+  * Twofish support for .kdb
+  * Refresh fixes
+
+KeePassDroid (1.5.4)
+  * Key file fixes
+  * Implement sorting
+
+KeePassDroid (1.5.3)
+  * Remove debug tracing
+
+KeePassDroid (1.5.2)
+  * Various crash fixes
+  * Fix group and entry deletion
+
+KeePassDroid (1.5.1)
+  * Handle .kdbx file extension
+
+KeePassDroid (1.5)
+  * Add beta read-only .kdbx support.
+
+KeePassDroid (1.0.6)
+  * Update Italian translations
+  * Font size setting
+  * URL decoding fix
+  * TAN handling
+
+KeePassDroid (1.0.5.1)
+  * Restore timeout to 5 minutes instead of 20 seconds
+
+KeePassDroid (1.0.5)
+  * Fix search after lock bug
+  * Add option to disable password masking by default
+  * Change service handling
+
+KeePassDroid (1.0.4)
+  * Fix CRLF string issues
+
+KeePassDroid (1.0.3)
+  * Update Italian translations
+  * Fix crash on saving entries
+  * Fix way empty strings were being saved (this made it look like there was
+    attachment in the Windows KeePass client).
+
+KeePassDroid (1.0.2)
+  * Fix file associations
+
+KeePassDroid (1.0.1)
+  * Fix crash on resume
+  * Fix memory leak in NativeAESCipherSpi
+  * Search index performance
+
+KeePassDroid (1.0)
+  * Performance!
+
+KeePassDroid (0.9.7)
+  * Update French translations
+  * Save and load performance improvement
+  * Fix locking issues with preference screen
+
+KeePassDroid (0.9.6)
+  * Add Russian translations
+  * Revamp settings
+  * Fix comment field in entries
+  * Fix loading after creating new dbs
+  * Fix opening from file on initial run
+
+KeePassDroid (0.9.5)
+  * Add notification based username and password copy
+  * Add German translations
+  * Try to create parent directory when creating database
+
+KeePassDroid (0.9.4)
+  * Add French translation 
+  * Fix crash on timeout.
+  
+KeePassDroid (0.9.3)
+  * Fix up translations
+  * Fix up timeouts.
+  * Display expiration time.
+
+KeePassDroid (0.9.2)
+  * Add Italian translations
+  * Multiple screen sizes
+  
+KeePassDroid (0.9.1)
+  * Add donate link
+  * Sort case insensitive
+  * Add show password checkbox
+
+KeePassDroid (0.9)
+  * Allow the creation of new databases on the device
+  * Sort entries and groups when adding or renaming.
+
+KeePassDroid (0.6)
+  * Add database settings
+  * Add password changing
+
+KeePassDroid (0.5)
+  * Correct group output logic
+  * Fix search
+  * Implement group and entry delete.
+
+KeePassDroid (0.4.1)
+  * Fix timeout locking crashes
+  * Fix lock from search screen.
+  * Increase clipboard timeout
+
+KeePassDroid (0.4)
+  * Support adding groups
+  
+KeePassDroid (0.3.4)
+  * Add context menus
+  * Deal with crash when resuming activity after the process has been killed
+  * Increase clipboard clear time as a stopgap until I come add a configurable setting.
+  * Pass upwards potentially more helpful error messages
+
+KeePassDroid (0.3.3)
+  * Add new icon and UI enhancements from Francis Jacquerye
+  * Fix crash on goto URL with no ://
+
+KeePassDroid (0.3.2)
+  * Fix the way passwords are stored
+
+KeePassDroid (0.3.1)
+  * Fix for non-ascii characters in password
+  * Add hints to fields
+
+KeePassDroid (0.3)
+  * Switch to native encryption for key preparation.  Seems to take better than half as long as bouncycastle in the emulator,
+    10 sec vs 25 sec.
+  * Implement search feature
+  * Require Android 1.5
+
+KeePassDroid (0.2.1)
+
+  * Support adding password entries
+  * Prevent crash on orientation change while loading or saving database.
+  * Fix most entries in the entry editor to be single line
+
+KeePassDroid (0.2.0)
+
+  * Support editing password entries
+  * Wrap long lines properly in entries
+
+KeePassDroid (0.1.8)
+
+  * Move database decryption into background thread
+  * Add about dialog
+
+KeePassDroid (0.1.7)
+
+  * Clear usernames and passwords from the clipboard after 30 seconds.
+
+KeePassDroid (0.1.6)
+
+  * Implement 5 minute timeout when the application is inactive.
+  * Scroll comment field when the text overflows.
+
+KeePassDroid (0.1.5)
+
+  * Improve file selection
+  * UI enhancements
+
+KeePassDroid (0.1.4)
+
+  * Add key file support
+
+KeePassDroid (0.1.3)
+
+  * Hide Meta-Info entries
+  * Change "Copy URL" to "Go to URL"
+  * Support "Go to Homepage"
+  * Support Lock menu option
+  * Fix blank password crash
+
+KeePassDroid (0.1.2)
+
+  * Fix crash when accessing the first root level group.
+
+KeePassDroid (0.1.1)
+
+  * Minor tweaks to layout.
+
+KeePassDroid (0.0.1)
+
+  * Initial Release

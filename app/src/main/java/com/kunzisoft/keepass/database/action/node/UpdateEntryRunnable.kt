@@ -1,0 +1,111 @@
+/*
+ * Copyright 2019 Jeremy Jamet / Kunzisoft.
+ *     
+ * This file is part of KeePassDX.
+ *
+ *  KeePassDX is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  KeePassDX is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.kunzisoft.keepass.database.action.node
+
+import android.content.Context
+import com.kunzisoft.keepass.database.ContextualDatabase
+import com.kunzisoft.keepass.database.element.Entry
+import com.kunzisoft.keepass.hardware.HardwareKey
+import com.kunzisoft.keepass.model.EntryInfo
+
+class UpdateEntryRunnable(
+    context: Context,
+    database: ContextualDatabase,
+    newEntry: EntryInfo,
+    save: Boolean,
+    afterActionNodesFinish: AfterActionNodesFinish?,
+    challengeResponseRetriever: (HardwareKey, ByteArray?) -> ByteArray
+) : ActionNodeDatabaseRunnable(
+    context,
+    database,
+    afterActionNodesFinish,
+    save,
+    challengeResponseRetriever
+) {
+
+    private var mOldEntry: Entry? = null
+    private var mNewEntry: Entry? = null
+
+    init {
+        database.getEntryById(newEntry.nodeId)?.let { oldEntry ->
+            mOldEntry = oldEntry
+            // Create a clone
+            mNewEntry = database.updateEntry(Entry(oldEntry), newEntry)
+        }
+    }
+
+    override fun nodeAction() {
+        val oldEntry = mOldEntry
+        val newEntry = mNewEntry
+        if (oldEntry != null && newEntry != null && oldEntry.nodeId == newEntry.nodeId) {
+            // WARNING : Re attribute parent removed in entry edit activity to save memory
+            newEntry.addParentFrom(oldEntry)
+
+            // Re-attribute history removed to save memory in Bundle creation
+            // Clear to be sure
+            newEntry.clearHistory()
+            oldEntry.getHistory().forEach {
+                newEntry.addEntryToHistory(it)
+            }
+
+            // Build oldest attachments
+            val oldEntryAttachments = oldEntry.getAttachments(database.attachmentPool, true)
+            val newEntryAttachments = newEntry.getAttachments(database.attachmentPool, true)
+            val attachmentsToRemove = oldEntryAttachments.toMutableList()
+            // Not use equals because only check name
+            newEntryAttachments.forEach { newAttachment ->
+                oldEntryAttachments.forEach { oldAttachment ->
+                    if (oldAttachment.name == newAttachment.name
+                        && oldAttachment.binaryData == newAttachment.binaryData
+                    )
+                        attachmentsToRemove.remove(oldAttachment)
+                }
+            }
+
+            // Update entry with new values
+            newEntry.touch(modified = true, touchParents = true)
+
+            // Create an entry history (an entry history don't have history)
+            newEntry.addEntryToHistory(Entry(oldEntry, copyHistory = false))
+            database.removeOldestEntryHistory(newEntry, database.attachmentPool)
+
+            // Only change data in index
+            database.updateEntry(newEntry)
+
+            // Remove oldest attachments
+            attachmentsToRemove.forEach {
+                database.removeAttachmentIfNotUsed(it)
+            }
+        }
+    }
+
+    override fun nodeFinish(): ActionNodesValues {
+        if (!result.isSuccess) {
+            // If we fail to save, back out changes to global structure
+            mOldEntry?.let { oldEntry ->
+                database.updateEntry(oldEntry)
+            }
+        }
+        return ActionNodesValues(
+            oldEntriesIds = mOldEntry?.nodeId?.let { listOf(it) },
+            newEntriesIds = mNewEntry?.nodeId?.let { listOf(it) } ?: listOf()
+        )
+    }
+}

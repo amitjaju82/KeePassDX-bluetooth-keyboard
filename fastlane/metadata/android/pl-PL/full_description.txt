@@ -1,0 +1,25 @@
+KeePassDX to <b>sejf i menedżer haseł, kluczy dostępu</b>, który umożliwia edycję <b>zaszyfrowanych danych w jednym pliku</b> w otwartym formacie KeePass oraz <b>bezpieczne wypełnianie formularzy</b>. <b>Nie wymaga połączenia z internetem</b>, integruje standardy projektowania systemu Android. Aplikacja jest <b>otwartoźródłowa, bez reklam</b>.
+
+<b>Funkcje</b>
+
+– Klucze dostępu do uwierzytelniania i lokalne przechowywanie kluczy prywatnych.
+– Biometryczne rozpoznawanie do szybkiego odblokowywania (odcisk palca / odblokowywanie twarzą / …).
+– Zarządzanie hasłami jednorazowymi (HOTP / TOTP) do uwierzytelniania dwuskładnikowego (2FA).
+– Automatyczne wypełnianie formularzy do łatwego wprowadzania haseł.
+– Klawiatura Magickeyboard do efektywnego wypełniania dowolnych pól.
+– Tworzenie zaszyfrowanych plików bazy danych.
+– Organizacja danych uwierzytelniających według wpisów i w drzewach grup.
+– Możliwość szybkiego otwierania i kopiowania pól adresów URI / URL.
+– Dynamiczne szablony do każdego typu wpisu.
+– Historia każdego wpisu.
+– Precyzyjne zarządzanie ustawieniami.
+– Material Design z motywami.
+– Obsługa plików .kdb i .kdbx (wersje od 1 do 4) z algorytmami: AES, Twofish, ChaCha20, Argon2.
+- Kompatybilność z większością alternatywnych programów (KeePass, KeePassXC, KeeWeb, …).
+– Kod napisany w językach natywnych (Kotlin / Java/ JNI / C).
+
+Możesz przekazać darowiznę lub kupić wersję profesjonalną, aby uzyskać lepszą obsługę i szybszy rozwój potrzebnych funkcji: <a href="https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro">https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro</a>
+
+Projekt stale się rozwija. Nie wahaj się sprawdzić stanu rozwoju kolejnych aktualizacji: <a href="https://github.com/Kunzisoft/KeePassDX/projects">https://github.com/Kunzisoft/KeePassDX/projects</a>
+
+Zgłoszenia problemów prosimy wysyłać pod adresem: <a href="https://github.com/Kunzisoft/KeePassDX/issues">https://github.com/Kunzisoft/KeePassDX/issues</a>

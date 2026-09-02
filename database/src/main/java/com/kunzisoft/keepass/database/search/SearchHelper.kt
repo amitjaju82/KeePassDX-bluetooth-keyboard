@@ -1,0 +1,331 @@
+/*
+ * Copyright 2019 Jeremy Jamet / Kunzisoft.
+ *     
+ * This file is part of KeePassDX.
+ *
+ *  KeePassDX is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  KeePassDX is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.kunzisoft.keepass.database.search
+
+import com.kunzisoft.keepass.database.element.Database
+import com.kunzisoft.keepass.database.element.Entry
+import com.kunzisoft.keepass.database.element.Group
+import com.kunzisoft.keepass.database.element.GroupId
+import com.kunzisoft.keepass.database.element.node.NodeHandler
+import com.kunzisoft.keepass.model.AppOriginEntryField.isAppId
+import com.kunzisoft.keepass.model.AppOriginEntryField.isAppIdSignature
+import com.kunzisoft.keepass.model.AppOriginEntryField.isWebDomain
+import com.kunzisoft.keepass.model.DatabaseInfo
+import com.kunzisoft.keepass.model.PasskeyEntryFields.isCredentialId
+import com.kunzisoft.keepass.model.PasskeyEntryFields.isPasskey
+import com.kunzisoft.keepass.model.PasskeyEntryFields.isRelyingParty
+import com.kunzisoft.keepass.model.SearchGroupInfo
+import com.kunzisoft.keepass.model.SortedEntryInfo
+import com.kunzisoft.keepass.otp.OtpEntryFields.isOTP
+import com.kunzisoft.keepass.otp.OtpEntryFields.isOTPURIField
+import com.kunzisoft.keepass.utils.UUIDUtils.asHexString
+import com.kunzisoft.keepass.utils.contains
+import com.kunzisoft.keepass.utils.inTheSameDomainAs
+
+/**
+ * Helper class for searching entries within a database.
+ * This class provides methods to iterate through groups and entries based on search parameters.
+ */
+class SearchHelper {
+
+    private var incrementEntry = 0
+
+    /**
+     * Creates a [SearchGroupInfo] containing entries that match the specified search parameters.
+     * @param database The database info to search in.
+     * @param searchParameters The parameters defining the search query and scope.
+     * @param fromGroup The starting group ID for the search, defaults to root if null.
+     * @param max The maximum number of search results to return.
+     * @return A [SearchGroupInfo] containing the search results.
+     */
+    fun createGroupInfoWithSearchResult(
+        database: DatabaseInfo,
+        searchParameters: SearchParameters,
+        fromGroup: GroupId? = null,
+        max: Int
+    ): SearchGroupInfo {
+
+        val searchGroup = SearchGroupInfo()
+        searchGroup.title = "\"" + searchParameters.searchQuery + "\""
+
+        // Search all entries
+        incrementEntry = 0
+
+        val allowCustomSearchable = database.allowCustomSearchableGroup()
+        val startGroup = if (searchParameters.searchInCurrentGroup && fromGroup != null) {
+            database.getGroupById(fromGroup) ?: database.rootGroup
+        } else {
+            database.rootGroup
+        }
+        if (groupConditions(database, startGroup, searchParameters, allowCustomSearchable, max)) {
+            startGroup?.doForEachChild(
+                object : NodeHandler<Entry>() {
+                    override fun operate(node: Entry): Boolean {
+                        if (incrementEntry >= max)
+                            return false
+                        if (database.entryIsTemplate(node) && !searchParameters.searchInTemplates)
+                            return false
+                        if (entryContainsString(database, node, searchParameters)) {
+                            searchGroup.addSearchResult(
+                                SortedEntryInfo(
+                                    entryToCopy = database.getEntryInfoFrom(node),
+                                    indexInParent = node.indexInParent(),
+                                    path = node.getPathString()
+                                )
+                            )
+                            incrementEntry++
+                        }
+                        // Stop searching when we have max entries
+                        return incrementEntry < max
+                    }
+                },
+                object : NodeHandler<Group>() {
+                    override fun operate(node: Group): Boolean {
+                        return groupConditions(database,
+                            node,
+                            searchParameters,
+                            allowCustomSearchable,
+                            max
+                        )
+                    }
+                },
+                false
+            )
+        }
+        return searchGroup
+    }
+
+    private fun groupConditions(
+        database: Database,
+        group: Group?,
+        searchParameters: SearchParameters,
+        allowCustomSearchable: Boolean,
+        max: Int
+    ): Boolean {
+        return if (group == null)
+            false
+        else if (incrementEntry >= max)
+            false
+        else if (database.groupIsInRecycleBin(group))
+            searchParameters.searchInRecycleBin
+        else if (database.groupIsInTemplates(group))
+            searchParameters.searchInTemplates
+        else if (!allowCustomSearchable)
+            true
+        else if (searchParameters.searchInSearchableGroup)
+            group.isSearchable()
+        else
+            true
+    }
+
+    private fun entryContainsString(
+        database: Database,
+        entry: Entry,
+        searchParameters: SearchParameters
+    ): Boolean {
+        // To search in field references
+        database.startManageEntry(entry)
+        // Search all strings in the entry
+        val searchFound = searchInEntry(entry, searchParameters)
+        database.stopManageEntry(entry)
+
+        return searchFound
+    }
+
+    companion object {
+
+        /**
+         * Checks if an entry matches the specified search parameters.
+         * @param entry The entry to search in.
+         * @param searchParameters The parameters defining the search query and scope.
+         * @return True if the entry matches the search criteria, false otherwise.
+         */
+        fun searchInEntry(
+            entry: Entry,
+            searchParameters: SearchParameters
+        ): Boolean {
+            // Search in Tags
+            if (searchParameters.searchInTags) {
+                if (!entry.tags.containsAny(searchParameters.tagsToSearch))
+                    return false
+            }
+
+            // Show all if the search string is empty
+            if (searchParameters.searchQuery.isEmpty())
+                return searchParameters.allowEmptyQuery
+
+            // Exclude entry expired
+            if (!searchParameters.searchInExpired) {
+                if (entry.isCurrentlyExpires)
+                    return false
+            }
+
+            // Search all strings in the KDBX entry
+            if (searchParameters.searchInTitles) {
+                if (checkSearchQuery(entry.title, searchParameters))
+                    return true
+            }
+            if (searchParameters.searchInUsernames) {
+                if (checkSearchQuery(entry.username, searchParameters))
+                    return true
+            }
+            if (searchParameters.searchInPasswords) {
+                if (checkSearchQuery(entry.password, searchParameters))
+                    return true
+            }
+            if (searchParameters.searchInAppIds) {
+                if (entry.getExtraFields().any { field ->
+                        field.isAppId()
+                        && checkSearchQuery(field.protectedValue.charArrayValue, searchParameters)
+                    })
+                    return true
+            }
+            if (searchParameters.searchInUrls) {
+                if (checkSearchQuery(entry.url, searchParameters) { stringToCheck, word ->
+                    specialWebDomainComparison(searchParameters, stringToCheck, word)
+                }) {
+                    return true
+                } else if (entry.getExtraFields().any { field ->
+                        field.isWebDomain()
+                        && checkSearchQuery(field.protectedValue.toString(), searchParameters) { stringToCheck, word ->
+                            specialWebDomainComparison(searchParameters, stringToCheck, word)
+                        }
+                    }) {
+                    return true
+                }
+            }
+            if (searchParameters.searchInRelyingParty) {
+                val relyingParty = searchParameters.searchQuery
+                val credentialIds = searchParameters.credentialIds
+                val containsRelyingParty = entry.getExtraFields().any { field ->
+                        field.isRelyingParty()
+                                && field.protectedValue.toString()
+                                    .equals(relyingParty, ignoreCase = true)
+                    }
+                // Check empty to allow any credential if not defined
+                val containsCredentialId =
+                    if (credentialIds.isEmpty())
+                        true
+                    else entry.getExtraFields().any { field ->
+                        field.isCredentialId() && credentialIds.any { credentialId ->
+                           checkSearchQuery(
+                               stringToCheck =  field.protectedValue.charArrayValue,
+                               searchParameters = SearchParameters().apply {
+                                   searchQuery = credentialId
+                                   caseSensitive = false
+                                   isRegex = false
+                               }
+                           )
+                        }
+                    }
+                return containsRelyingParty && containsCredentialId
+            }
+            if (searchParameters.searchInNotes) {
+                if (checkSearchQuery(entry.notes, searchParameters))
+                    return true
+            }
+            if (searchParameters.searchInUUIDs) {
+                val hexString = entry.nodeId.id.asHexString() ?: ""
+                if (checkSearchQuery(hexString, searchParameters))
+                    return true
+            }
+            if (searchParameters.searchInOTP) {
+                if (entry.getExtraFields().any { field ->
+                    field.isOTPURIField()
+                    && checkSearchQuery(field.protectedValue.charArrayValue, searchParameters)
+                })
+                    return true
+            }
+            if (searchParameters.searchInOther) {
+                if (entry.getExtraFields().any { field ->
+                    !field.isAppId()
+                    && !field.isAppIdSignature()
+                    && !field.isWebDomain()
+                    && !field.isOTP()
+                    && !field.isPasskey()
+                    && checkSearchQuery(field.protectedValue.charArrayValue, searchParameters)
+                })
+                    return true
+            }
+            return false
+        }
+
+        private fun specialWebDomainComparison(
+            searchParameters: SearchParameters,
+            stringToCheck: String,
+            word: String
+        ): Boolean? {
+            return if (searchParameters.searchByDomain) {
+                try {
+                    stringToCheck.inTheSameDomainAs(
+                        value = word,
+                        sameSubDomain = searchParameters.searchBySubDomain
+                    )
+                } catch (_: Exception) {
+                    false
+                }
+            } else null
+        }
+
+        private fun checkSearchQuery(
+            stringToCheck: String,
+            searchParameters: SearchParameters,
+            specialComparison: ((check: String, word: String) -> Boolean?)? = null
+        ): Boolean {
+            return checkSearchQuery(stringToCheck.toCharArray(), searchParameters) { check, word ->
+                specialComparison?.invoke(String(check), word)
+            }
+        }
+
+        private fun checkSearchQuery(
+            stringToCheck: CharArray,
+            searchParameters: SearchParameters,
+            specialComparison: ((check: CharArray, word: String) -> Boolean?)? = null
+        ): Boolean {
+            /*
+            // TODO Search settings
+            var removeAccents = true <- Too much time, to study
+            */
+            if (stringToCheck.isEmpty())
+                return false
+            return if (searchParameters.isRegex) {
+                val regex = if (searchParameters.caseSensitive) {
+                    searchParameters.searchQuery
+                        .toRegex(RegexOption.DOT_MATCHES_ALL)
+                } else {
+                    searchParameters.searchQuery
+                        .toRegex(setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
+                }
+                regex.matches(String(stringToCheck))
+            } else {
+                specialComparison?.invoke(stringToCheck, searchParameters.searchQuery)
+                    ?: run {
+                        // Search with space separator #175
+                        var searchFound = true
+                        searchParameters.searchQuery.split(" ").forEach { word ->
+                            searchFound = searchFound
+                                    && stringToCheck.contains(word, !searchParameters.caseSensitive)
+                        }
+                        searchFound
+                    }
+            }
+        }
+    }
+}

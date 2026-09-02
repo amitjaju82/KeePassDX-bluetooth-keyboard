@@ -1,0 +1,25 @@
+KeePassDX est un <b>coffre-fort et un gestionnaire de passkeys et de mots de passe</b> qui permet d'éditer des <b>données chiffrées dans un seul fichier</b> au format ouvert KeePass et de <b>remplir les formulaires de manière sécurisée</b>, ne nécessite <b>aucune connexion Internet</b> et intégre les normes de conception Android. L'application est <b>open source, sans publicité</b>.
+
+<b>Fonctionnalités</b>
+
+- Passkeys pour l'authentification et le stockage local des clés privées.
+- Reconnaissance biométrique pour un déblocage rapide (Empreintes digitales / Déverouillage par visage / …).
+- Gestion des mots de passe à usage unique (One-Time Password HOTP / TOTP) pour l'authentification à deux facteurs (2FA).
+- Remplissage automatique pour faciliter le remplissage des formulaires avec des mots de passe.
+- Magiclavier pour remplir efficacement n'importe quel champ.
+- Création de fichiers de bases de données chiffrés.
+- Organisation des informations d'identification par entrée et dans des arborescences de groupes.
+- Permet la copie rapide de champs et l'ouverture d'URI /URL.
+- Gabarits dynamiques pour chaque type d'entrée.
+- Historique de chaque entrée.
+- Gestion précise des paramètres.
+- Material design avec thèmes.
+- Support des fichiers .kdb et .kdbx (version 1 à 4) avec algorithme AES - Twofish - ChaCha20 - Argon2.
+- Compatible avec la majorité des programmes alternatifs (KeePass, KeePassXC, KeeWeb, …)
+- Code écrit en langages natifs (Kotlin / Java / JNI / C).
+
+Vous pouvez faire un don ou acheter la version pro pour un meilleur service et un développement rapide des fonctionnalités que vous souhaitez : <a href="https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro">https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro</a>
+
+Le projet est en constante évolution. N'hésitez pas à vérifier l'état de développement des prochaines mises à jour : <a href="https://github.com/Kunzisoft/KeePassDX/projects">https://github.com/Kunzisoft/KeePassDX/projects</a>
+
+Vous avez un bug : <a href="https://github.com/Kunzisoft/KeePassDX/issues">https://github.com/Kunzisoft/KeePassDX/issues</a>

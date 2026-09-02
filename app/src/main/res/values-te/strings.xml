@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2020 Jeremy Jamet / Kunzisoft.
+
+    This file is part of KeePassDX.
+
+    KeePassDX is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    KeePassDX is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+--><resources>
+    <string name="feedback">అభిప్రాయం</string>
+    <string name="homepage">హోమ్ పేజీ</string>
+    <string name="about_description">KeePassDX అనేది KeePass పాస్వర్డ్ మేనేజర్ యొక్క యాండ్రాయిడ్ అమలు.</string>
+    <string name="accept">ఆమోదించు</string>
+    <string name="add_entry">"ఎంట్రీని జత చెయ్యండి "</string>
+    <string name="edit_entry">ఎంట్రీని మార్పు చెయ్యండి</string>
+    <string name="add_group">"గ్రూపుని జత చెయ్యండి "</string>
+    <string name="encryption">ఎన్క్రిప్షన్</string>
+    <string name="encryption_algorithm">ఎన్క్రిప్షన్ అల్గోరిథం</string>
+    <string name="key_derivation_function">కీ వ్యుత్పత్తి ఫంక్షన్</string>
+    <string name="app_timeout">యాప్ కి అనువర్తించిన గడువు ముగిసింది</string>
+</resources>

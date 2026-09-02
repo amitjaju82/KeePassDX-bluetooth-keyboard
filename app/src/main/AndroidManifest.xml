@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto">
+    <supports-screens
+      android:smallScreens="true"
+      android:normalScreens="true"
+      android:largeScreens="true"
+      android:anyDensity="true" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission
+        android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission
+        android:name="android.permission.VIBRATE"/>
+    <queries>
+        <!-- Apps with a launcher (getLaunchIntentForPackage)-->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <!-- Browsers (getInstalledBrowsersWithSignatures) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <!-- Keyboard switcher -->
+        <intent>
+            <action android:name="com.android.keyboard.SWITCH_KEYBOARD" />
+        </intent>
+        <!-- Yubikey hardware key -->
+        <intent>
+            <action android:name="android.yubikey.intent.action.CHALLENGE_RESPONSE" />
+        </intent>
+        <!-- Specific known packages without launcher -->
+        <package android:name="${googlePlayServicesPackage}" />
+        <!-- Files creation -->
+        <intent>
+            <action android:name="android.intent.action.CREATE_DOCUMENT" />
+            <data android:mimeType="application/octet-stream" />
+        </intent>
+    </queries>
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:name="com.kunzisoft.keepass.app.App"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/old_backup_rules"
+        android:dataExtractionRules="@xml/backup_rules"
+        android:backupAgent="com.kunzisoft.keepass.backup.SettingsBackupAgent"
+        android:largeHeap="true"
+        android:resizeableActivity="true"
+        android:supportsRtl="true"
+        android:theme="@style/KeepassDXStyle.Night"
+        tools:targetApi="s"
+        tools:ignore="CredentialDependency">
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="${googleAndroidBackupAPIKey}" />
+        <activity
+            android:name="com.kunzisoft.keepass.activities.FileDatabaseSelectActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:configChanges="keyboardHidden"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.kunzisoft.keepass.activities.MainCredentialActivity"
+            android:exported="true"
+            android:configChanges="keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateUnchanged">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdb" />
+                <data android:pathPattern=".*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdbx" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.kdbx" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/x-kdb" />
+                <data android:mimeType="application/x-kdbx" />
+                <data android:mimeType="application/x-keepass" />
+                <data android:host="*" />
+                <data android:pathPattern=".*" />
+                <data android:pathPattern=".*\\.*" />
+                <data android:pathPattern=".*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.*" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.*" />
+            </intent-filter>
+        </activity>
+        <!-- Main Activity -->
+        <activity
+            android:name="com.kunzisoft.keepass.activities.GroupActivity"
+            android:exported="false"
+            android:configChanges="keyboardHidden"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.kunzisoft.keepass.search.SearchResults"
+                android:exported="false"/>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name="com.kunzisoft.keepass.activities.EntryActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.kunzisoft.keepass.activities.IconPickerActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.kunzisoft.keepass.activities.KeyGeneratorActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.kunzisoft.keepass.activities.ImageViewerActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.kunzisoft.keepass.activities.EntryEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- About and Settings -->
+        <activity
+            android:name="com.kunzisoft.keepass.activities.AboutActivity"
+            android:launchMode="singleTask"
+            android:label="@string/about" />
+        <activity
+            android:name="com.kunzisoft.keepass.settings.SettingsActivity" />
+        <activity
+            android:name="com.kunzisoft.keepass.settings.DeviceUnlockSettingsActivity" />
+        <activity
+            android:name="com.kunzisoft.keepass.settings.MagikeyboardSettingsActivity"
+            android:label="@string/keyboard_setting_label"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.kunzisoft.keepass.settings.AutofillSettingsActivity"
+            tools:targetApi="26" />
+        <activity
+            android:name="com.kunzisoft.keepass.settings.PasskeysSettingsActivity"
+            tools:targetApi="34" />
+        <activity
+            android:name="com.kunzisoft.keepass.settings.AppearanceSettingsActivity" />
+        <activity
+            android:name="com.kunzisoft.keepass.credentialprovider.activity.HardwareKeyActivity"
+            android:theme="@style/Theme.Transparent"
+            android:exported="false"
+            android:excludeFromRecents="true" />
+        <activity
+            android:name="com.kunzisoft.keepass.credentialprovider.activity.AutofillLauncherActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden"
+            android:exported="false"
+            android:excludeFromRecents="true" />
+        <activity
+            android:name="com.kunzisoft.keepass.credentialprovider.activity.EntrySelectionLauncherActivity"
+            android:theme="@style/Theme.Transparent"
+            android:launchMode="singleInstance"
+            android:exported="true"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="otpauth"/>
+                <data android:host="totp"/>
+                <data android:host="hotp"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.kunzisoft.keepass.credentialprovider.activity.PasswordLauncherActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            tools:targetApi="upside_down_cake" />
+        <activity
+            android:name="com.kunzisoft.keepass.credentialprovider.activity.PasskeyLauncherActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            tools:targetApi="upside_down_cake" />
+        <service
+            android:name="com.kunzisoft.keepass.services.DatabaseTaskNotificationService"
+            android:foregroundServiceType="dataSync"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.kunzisoft.keepass.services.AttachmentFileNotificationService"
+            android:foregroundServiceType="dataSync"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.kunzisoft.keepass.services.ClipboardEntryNotificationService"
+            android:foregroundServiceType="specialUse"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.kunzisoft.keepass.services.KeyboardEntryNotificationService"
+            android:foregroundServiceType="specialUse"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="com.kunzisoft.keepass.services.DeviceUnlockNotificationService"
+            android:foregroundServiceType="specialUse"
+            android:enabled="true"
+            android:exported="false" />
+        <!-- Receiver for Autofill -->
+        <service
+            android:name="com.kunzisoft.keepass.credentialprovider.autofill.KeeAutofillService"
+            android:label="@string/app_name"
+            android:exported="true"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <meta-data
+                android:name="android.autofill"
+                android:resource="@xml/dataset_service" />
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.kunzisoft.keepass.credentialprovider.magikeyboard.MagikeyboardService"
+            android:label="@string/keyboard_label"
+            android:exported="true"
+            android:permission="android.permission.BIND_INPUT_METHOD" >
+            <meta-data android:name="android.view.im"
+                android:resource="@xml/keyboard_method"/>
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.kunzisoft.keepass.credentialprovider.passkey.PasskeyProviderService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/credential_provider_service_name"
+            android:icon="@mipmap/ic_launcher"
+            android:permission="android.permission.BIND_CREDENTIAL_PROVIDER_SERVICE"
+            tools:targetApi="upside_down_cake">
+            <intent-filter>
+                <action android:name="android.service.credentials.CredentialProviderService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.credentials.provider"
+                android:resource="@xml/provider" />
+        </service>
+
+        <receiver
+            android:name="com.kunzisoft.keepass.receivers.DexModeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.app.action.ENTER_KNOX_DESKTOP_MODE" />
+                <action android:name="android.app.action.EXIT_KNOX_DESKTOP_MODE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+    </application>
+</manifest> 

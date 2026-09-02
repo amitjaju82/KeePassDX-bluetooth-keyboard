@@ -1,0 +1,350 @@
+/*
+ * Copyright 2019 Jeremy Jamet / Kunzisoft.
+ *     
+ * This file is part of KeePassDX.
+ *
+ *  KeePassDX is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  KeePassDX is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.kunzisoft.keepass.activities.dialogs
+
+import android.app.Dialog
+import android.content.DialogInterface
+import android.net.Uri
+import android.os.Bundle
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.TextWatcher
+import android.util.Log
+import android.view.View
+import android.widget.CompoundButton
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.textfield.TextInputLayout
+import com.kunzisoft.keepass.R
+import com.kunzisoft.keepass.activities.helpers.ExternalFileHelper
+import com.kunzisoft.keepass.activities.helpers.setOpenDocumentClickListener
+import com.kunzisoft.keepass.credentialprovider.activity.HardwareKeyActivity
+import com.kunzisoft.keepass.database.element.MasterCredential
+import com.kunzisoft.keepass.database.element.binary.BinaryData.Companion.MAX_BINARY_BYTE
+import com.kunzisoft.keepass.utils.UriUtil.getDocumentFile
+import com.kunzisoft.keepass.utils.UriUtil.openUrl
+import com.kunzisoft.keepass.utils.clear
+import com.kunzisoft.keepass.view.HardwareKeySelectionView
+import com.kunzisoft.keepass.view.KeyFileSelectionView
+import com.kunzisoft.keepass.view.PasswordEditView
+import com.kunzisoft.keepass.view.applyFontVisibility
+import com.kunzisoft.keepass.viewmodels.SetMainCredentialViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
+
+
+class SetMainCredentialDialogFragment : DatabaseDialogFragment() {
+
+    private lateinit var rootView: View
+
+    private lateinit var passwordCheckBox: CompoundButton
+    private lateinit var passwordEditView: PasswordEditView
+    private lateinit var passwordRepeatTextInputLayout: TextInputLayout
+    private lateinit var passwordRepeatView: EditText
+
+    private lateinit var keyFileCheckBox: CompoundButton
+    private lateinit var keyFileGenerateButton: View
+    private lateinit var keyFileSelectionView: KeyFileSelectionView
+
+    private lateinit var hardwareKeyCheckBox: CompoundButton
+    private lateinit var hardwareKeySelectionView: HardwareKeySelectionView
+
+    private var mExternalFileHelper: ExternalFileHelper? = null
+
+    private val mSetMainCredentialViewModel: SetMainCredentialViewModel by activityViewModels()
+    private var mConfirmationDialog: AlertDialog? = null
+
+    private val passwordTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+        override fun afterTextChanged(editable: Editable) {
+            passwordCheckBox.isChecked = true
+        }
+    }
+
+    override fun onDetach() {
+        mConfirmationDialog?.dismiss()
+        mConfirmationDialog = null
+        super.onDetach()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    mSetMainCredentialViewModel.confirmationState.collect { state ->
+                        mConfirmationDialog?.dismiss()
+                        if (state is SetMainCredentialViewModel.ConfirmationState.Showing) {
+                            when (state.type) {
+                                SetMainCredentialViewModel.ConfirmationType.EMPTY_PASSWORD ->
+                                    showEmptyPasswordConfirmationDialog()
+                                SetMainCredentialViewModel.ConfirmationType.NO_KEY ->
+                                    showNoKeyConfirmationDialog()
+                                SetMainCredentialViewModel.ConfirmationType.KEYFILE_LENGTH ->
+                                    state.data?.let { showLengthKeyFileConfirmationDialog(it) }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    mSetMainCredentialViewModel.validationError.collect { error ->
+                        when (error) {
+                            SetMainCredentialViewModel.ValidationError.PasswordsDoNotMatch ->
+                                passwordRepeatTextInputLayout.error = getString(R.string.error_pass_match)
+                            SetMainCredentialViewModel.ValidationError.NoKeyFileSelected ->
+                                keyFileSelectionView.error = getString(R.string.error_nokeyfile)
+                            SetMainCredentialViewModel.ValidationError.NoHardwareKeySelected ->
+                                hardwareKeySelectionView.error = getString(R.string.error_no_hardware_key)
+                            SetMainCredentialViewModel.ValidationError.NoCredentialsDisallowed ->
+                                passwordRepeatTextInputLayout.error = getString(R.string.error_disallow_no_credentials)
+                            is SetMainCredentialViewModel.ValidationError.HardwareDriverRequired ->
+                                hardwareKeySelectionView.error = getString(R.string.error_driver_required, error.hardwareKeyName)
+                        }
+                    }
+                }
+                launch {
+                    mSetMainCredentialViewModel.onMainCredentialAssigned.collect {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        activity?.let { activity ->
+
+            var allowNoMasterKey  = false
+            arguments?.apply {
+                if (containsKey(ALLOW_NO_MASTER_KEY_ARG))
+                    allowNoMasterKey = getBoolean(ALLOW_NO_MASTER_KEY_ARG, false)
+            }
+
+            val builder = AlertDialog.Builder(activity)
+            val inflater = activity.layoutInflater
+
+            rootView = inflater.inflate(R.layout.fragment_set_main_credential, null)
+            builder.setView(rootView)
+                    // Add action buttons
+                    .setPositiveButton(android.R.string.ok) { _, _ -> }
+                    .setNegativeButton(android.R.string.cancel) { _, _ -> }
+
+            rootView.findViewById<View>(R.id.credentials_information)?.setOnClickListener {
+                activity.openUrl(R.string.credentials_explanation_url)
+            }
+
+            passwordCheckBox = rootView.findViewById(R.id.password_checkbox)
+            passwordEditView = rootView.findViewById(R.id.password_view)
+            passwordRepeatTextInputLayout = rootView.findViewById(R.id.password_repeat_input_layout)
+            passwordRepeatView = rootView.findViewById(R.id.password_confirmation)
+            passwordRepeatView.applyFontVisibility()
+
+            keyFileCheckBox = rootView.findViewById(R.id.keyfile_checkbox)
+            keyFileGenerateButton = rootView.findViewById(R.id.keyfile_generate)
+            keyFileSelectionView = rootView.findViewById(R.id.keyfile_selection)
+
+            hardwareKeyCheckBox = rootView.findViewById(R.id.hardware_key_checkbox)
+            hardwareKeySelectionView = rootView.findViewById(R.id.hardware_key_selection)
+
+            mExternalFileHelper = ExternalFileHelper(this)
+            mExternalFileHelper?.buildCreateDocument { createdFileUri ->
+                createdFileUri?.let { uri ->
+                    createKeyFile(uri)
+                    keyFileSelectionView.error = null
+                    keyFileCheckBox.isChecked = true
+                    keyFileSelectionView.uri = uri
+                }
+            }
+            mExternalFileHelper?.buildOpenDocument { uri ->
+                uri?.let { pathUri ->
+                    pathUri.getDocumentFile(requireContext())?.length()?.let { lengthFile ->
+                        keyFileSelectionView.error = null
+                        keyFileCheckBox.isChecked = true
+                        keyFileSelectionView.uri = pathUri
+                        mSetMainCredentialViewModel.showKeyFileLengthConfirmation(lengthFile)
+                    }
+                }
+            }
+            keyFileGenerateButton.setOnClickListener {
+                mExternalFileHelper?.createDocument(DEFAULT_KEYFILE_NAME)
+            }
+            keyFileSelectionView.setOpenDocumentClickListener(mExternalFileHelper)
+
+            hardwareKeySelectionView.selectionListener = { hardwareKey ->
+                hardwareKeyCheckBox.isChecked = true
+                hardwareKeySelectionView.error =
+                    if (!HardwareKeyActivity.isHardwareKeyAvailable(requireActivity(), hardwareKey)) {
+                        // show hardware driver dialog if required
+                        getString(R.string.error_driver_required, hardwareKey.toString())
+                    } else {
+                        null
+                    }
+            }
+
+            val dialog = builder.create()
+            dialog.setOnShowListener { dialog1 ->
+                val positiveButton = (dialog1 as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+                positiveButton.setOnClickListener {
+                    mSetMainCredentialViewModel.assignCredential(
+                        password = passwordEditView.passwordCharArray,
+                        uri = keyFileSelectionView.uri,
+                        hardwareKey = hardwareKeySelectionView.hardwareKey
+                    )
+
+                    val repeatPassword = CharArray(passwordRepeatView.length())
+                    passwordRepeatView.text.getChars(0, passwordRepeatView.length(), repeatPassword, 0)
+
+                    mSetMainCredentialViewModel.validateAndApprove(
+                        passwordChecked = passwordCheckBox.isChecked,
+                        keyFileChecked = keyFileCheckBox.isChecked,
+                        hardwareKeyChecked = hardwareKeyCheckBox.isChecked,
+                        repeatPassword,
+                        allowNoMasterKey
+                    ) { hardwareKey ->
+                        HardwareKeyActivity.isHardwareKeyAvailable(requireActivity(), hardwareKey)
+                    }
+                    repeatPassword.clear()
+                }
+                val negativeButton = dialog1.getButton(DialogInterface.BUTTON_NEGATIVE)
+                negativeButton.setOnClickListener {
+                    dismiss()
+                }
+            }
+
+            return dialog
+        }
+
+        return super.onCreateDialog(savedInstanceState)
+    }
+
+    private fun createKeyFile(uri: Uri) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                activity?.contentResolver?.openOutputStream(uri)?.use { outputStream ->
+                    MasterCredential.createKeyFile(outputStream)
+                }
+            } catch (e: IOException) {
+                Log.e(TAG, "Unable  to create the KeyFile.", e)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // To check checkboxes if a text is present
+        passwordEditView.addTextChangedListener(passwordTextWatcher)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        passwordEditView.removeTextChangedListener(passwordTextWatcher)
+    }
+
+    private fun showEmptyPasswordConfirmationDialog() {
+        activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage(R.string.warning_empty_password)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        mSetMainCredentialViewModel.confirmMainCredential()
+                    }
+                    .setNegativeButton(android.R.string.cancel) { _, _ ->
+                        mSetMainCredentialViewModel.dismissConfirmation()
+                    }
+            mConfirmationDialog = builder.create()
+            mConfirmationDialog?.show()
+        }
+    }
+
+    private fun showNoKeyConfirmationDialog() {
+        activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage(R.string.warning_no_encryption_key)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        mSetMainCredentialViewModel.confirmMainCredential()
+                    }
+                    .setNegativeButton(android.R.string.cancel) { _, _ ->
+                        mSetMainCredentialViewModel.dismissConfirmation()
+                    }
+            mConfirmationDialog = builder.create()
+            mConfirmationDialog?.show()
+        }
+    }
+
+    private fun showLengthKeyFileConfirmationDialog(length: Long) {
+        activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage(SpannableStringBuilder().apply {
+                append(getString(R.string.warning_empty_keyfile_explanation))
+                var warning = false
+                if (length <= 0L) {
+                    warning = true
+                    append("\n\n")
+                    append(getString(R.string.warning_empty_keyfile))
+                } else if (length.toULong() > MAX_BINARY_BYTE) {
+                    warning = true
+                    append("\n\n")
+                    append(getString(R.string.warning_large_keyfile))
+                }
+                if (warning) {
+                    append("\n\n")
+                    append(getString(R.string.warning_sure_add_file))
+                }
+            })
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    mSetMainCredentialViewModel.dismissConfirmation()
+                }
+                .setNegativeButton(android.R.string.cancel) { _, _ ->
+                    keyFileCheckBox.isChecked = false
+                    keyFileSelectionView.uri = null
+                    mSetMainCredentialViewModel.dismissConfirmation()
+                }
+            mConfirmationDialog = builder.create()
+            mConfirmationDialog?.show()
+        }
+    }
+
+    companion object {
+        private val TAG = SetMainCredentialDialogFragment::class.simpleName
+
+        private const val ALLOW_NO_MASTER_KEY_ARG = "ALLOW_NO_MASTER_KEY_ARG"
+        private val DEFAULT_KEYFILE_FORMAT = MasterCredential.CREATOR.KeyFileFormat.XML_2_0
+        private val DEFAULT_KEYFILE_NAME = "keyfile.${DEFAULT_KEYFILE_FORMAT.defaultFileExtension}"
+
+        fun getInstance(allowNoMasterKey: Boolean): SetMainCredentialDialogFragment {
+            val fragment = SetMainCredentialDialogFragment()
+            val args = Bundle()
+            args.putBoolean(ALLOW_NO_MASTER_KEY_ARG, allowNoMasterKey)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+}

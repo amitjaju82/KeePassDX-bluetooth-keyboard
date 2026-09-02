@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2019 Jeremy Jamet / Kunzisoft.
+     
+ This file is part of KeePassDX.
+
+  KeePassDX is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  KeePassDX is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/general">
+
+        <SwitchPreferenceCompat
+            android:key="@string/allow_no_password_key"
+            android:title="@string/allow_no_password_title"
+            android:summary="@string/allow_no_password_summary"
+            android:defaultValue="@bool/allow_no_password_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/delete_entered_password_key"
+            android:title="@string/delete_entered_password_title"
+            android:summary="@string/delete_entered_password_summary"
+            android:defaultValue="@bool/delete_entered_password_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/enable_auto_save_database_key"
+            android:title="@string/enable_auto_save_database_title"
+            android:summary="@string/enable_auto_save_database_summary"
+            android:defaultValue="@bool/enable_auto_save_database_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/auto_focus_search_key"
+            android:title="@string/auto_focus_search_title"
+            android:summary="@string/auto_focus_search_summary"
+            android:defaultValue="@bool/auto_focus_search_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/enable_keep_screen_on_key"
+            android:title="@string/enable_keep_screen_on_title"
+            android:summary="@string/enable_keep_screen_on_summary"
+            android:defaultValue="@bool/enable_keep_screen_on_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/enable_screenshot_mode_key"
+            android:title="@string/enable_screenshot_mode_title"
+            android:summary="@string/enable_screenshot_mode_summary"
+            android:defaultValue="@bool/enable_screenshot_mode_key_default"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/user_verification">
+
+        <SwitchPreferenceCompat
+            android:key="@string/user_verification_device_credential_key"
+            android:title="@string/user_verification_device_credential_title"
+            android:summary="@string/user_verification_device_credential_summary"
+            android:defaultValue="@bool/user_verification_device_credential_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/lock">
+
+        <com.kunzisoft.keepass.settings.preference.DurationDialogPreference
+            android:key="@string/app_timeout_key"
+            android:title="@string/app_timeout"
+            android:summary="@string/app_timeout_summary"
+            android:dialogTitle="@string/app_timeout"
+            android:defaultValue="@string/timeout_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/lock_database_screen_off_key"
+            android:title="@string/lock_database_screen_off_title"
+            android:summary="@string/lock_database_screen_off_summary"
+            android:defaultValue="@bool/lock_database_screen_off_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/lock_database_back_root_key"
+            android:title="@string/lock_database_back_root_title"
+            android:summary="@string/lock_database_back_root_summary"
+            android:defaultValue="@bool/lock_database_back_root_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/lock_database_show_button_key"
+            android:title="@string/lock_database_show_button_title"
+            android:summary="@string/lock_database_show_button_summary"
+            android:defaultValue="@bool/lock_database_show_button_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/database_history">
+
+        <SwitchPreferenceCompat
+            android:key="@string/remember_database_locations_key"
+            android:title="@string/remember_database_locations_title"
+            android:summary="@string/remember_database_locations_summary"
+            android:defaultValue="@bool/remember_database_locations_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/remember_keyfile_locations_key"
+            android:title="@string/remember_keyfile_locations_title"
+            android:summary="@string/remember_keyfile_locations_summary"
+            android:dependency="@string/remember_database_locations_key"
+            android:defaultValue="@bool/remember_keyfile_locations_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/remember_hardware_key_key"
+            android:title="@string/remember_hardware_key_title"
+            android:summary="@string/remember_hardware_key_summary"
+            android:dependency="@string/remember_database_locations_key"
+            android:defaultValue="@bool/remember_hardware_key_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/show_recent_files_key"
+            android:title="@string/show_recent_files_title"
+            android:summary="@string/show_recent_files_summary"
+            android:dependency="@string/remember_database_locations_key"
+            android:defaultValue="@bool/show_recent_files_default"/>
+        <SwitchPreferenceCompat
+            android:key="@string/hide_broken_locations_key"
+            android:title="@string/hide_broken_locations_title"
+            android:summary="@string/hide_broken_locations_summary"
+            android:dependency="@string/show_recent_files_key"
+            android:defaultValue="@bool/hide_broken_locations_default"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/properties">
+
+        <Preference
+            android:key="@string/import_app_properties_key"
+            android:title="@string/import_app_properties_title"
+            android:summary="@string/import_app_properties_summary"/>
+        <Preference
+            android:key="@string/export_app_properties_key"
+            android:title="@string/export_app_properties_title"
+            android:summary="@string/export_app_properties_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

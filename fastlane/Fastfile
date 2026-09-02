@@ -1,0 +1,72 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+  GRADLE_FILE_PATH = "app/build.gradle.kts"
+
+  desc "Runs all the tests"
+  lane :tests do
+    gradle(task: "test")
+  end
+
+  desc "Build a new version"
+  lane :build do |options|
+    gradle(
+      task: "assemble",
+      flavor: options[:flavor],
+      build_type: "Release",
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => options[:storefile],
+        "android.injected.signing.store.password" => options[:storepass],
+        "android.injected.signing.key.alias" => options[:keyalias],
+        "android.injected.signing.key.password" => options[:keypass],
+      }
+    )
+    sh("mkdir", "-p", "../releases")
+    @releaseFile = "../releases/KeePassDX-" + android_get_version_name(gradle_file: GRADLE_FILE_PATH) + "-" + options[:flavor] + ".apk"
+    sh("cp", "../app/build/outputs/apk/" + options[:flavor] + "/release/app-" + options[:flavor] + "-release.apk", @releaseFile)
+  end
+  
+  desc "Build each flavor and create release"
+  lane :build_release do |options|
+    signing_options = {
+      storefile: options[:storefile],
+      storepass: options[:storepass],
+      keyalias: options[:keyalias],
+      keypass: options[:keypass]
+    }
+
+    build(signing_options.merge(flavor: "free"))
+    build(signing_options.merge(flavor: "libre"))
+
+    sh("./releaseDescGenerator.sh", android_get_version_code(gradle_file: GRADLE_FILE_PATH), android_get_version_name(gradle_file: GRADLE_FILE_PATH))
+  end
+
+  desc "Deploy a new Free Beta version to the Google Play"
+  lane :deploy_beta_free do
+    upload_to_play_store(
+      track: "beta",
+      skip_upload_metadata: "false",
+      skip_upload_images: "true",
+      skip_upload_screenshots: "true",
+      apk: "./app/build/outputs/apk/free/release/app-free-release.apk",
+      validate_only: "false",
+    )
+    gradle(
+      task: 'clean'
+    )
+  end
+
+end

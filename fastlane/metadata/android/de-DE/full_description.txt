@@ -1,0 +1,25 @@
+KeePassDX ist ein Open-Source-<b>Passwort-Tresor und -Manager</b>, der es ermöglicht, verschlüsselte <b>Daten in einer einzigen Datei</b> im offenen KeePass-Format zu bearbeiten und <b>die Formulare auf sichere Weise auszufüllen</b>, <b>erfordert keine Internetverbindung</b> und integriert Android-Designstandards. Die App ist <b>Open Source, ohne Werbung</b>.
+
+<b>Funktionalitäten</b>
+
+- Passkeys für die Authentifizierung und lokales Speichern privater Schlüssel.
+- Biometrische Erkennung für schnelles Entsperren (Fingerabdruck / Entsperren durch Gesicht / …).
+- Verwaltung von Einmalpasswörtern (HOTP / TOTP) für die Zwei-Faktor-Authentifizierung (2FA).
+- Automatisches Ausfüllen von Formularen mit Passwörtern.
+- Magikeyboard zum effizienten Ausfüllen beliebiger Felder.
+- Erstellen verschlüsselter Datenbankdateien.
+- Organisation von Anmeldedaten nach Einträgen und in Gruppenbäumen.
+- Ermöglicht das schnelle Öffnen und Kopieren von URI-/URL-Feldern.
+- Dynamische Vorlagen für jeden Eintragstyp.
+- Verlauf jedes Eintrags.
+- Präzise Verwaltung der Einstellungen.
+- Material Design.
+- Unterstützung von .kdb- und .kdbx-Dateien (Version 1 bis 4) mit AES – Twofish – ChaCha20 – Argon2-Algorithmus.
+- Kompatibel mit den meisten alternativen Programmen (KeePass, KeePassXC, KeeWeb, …).
+- In nativen Sprachen geschriebener Code (Kotlin / Java / JNI / C).
+
+Sie können spenden oder die Pro-Version kaufen, um einen besseren Service und eine schnelle Entwicklung der von Ihnen gewünschten Funktionen zu erhalten: <a href="https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro">https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro</a>
+
+Das Projekt wird ständig weiterentwickelt. Zögern Sie nicht, den Entwicklungsstand der nächsten Updates zu überprüfen: <a href="https://github.com/Kunzisoft/KeePassDX/projects">https://github.com/Kunzisoft/KeePassDX/projects</a>
+
+Sie haben einen Bug : <a href="https://github.com/Kunzisoft/KeePassDX/issues">https://github.com/Kunzisoft/KeePassDX/issues</a>

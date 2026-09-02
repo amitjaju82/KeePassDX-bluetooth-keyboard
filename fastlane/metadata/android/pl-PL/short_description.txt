@@ -1,0 +1,1 @@
+Zarządzaj kluczami dostępu i hasłami w lokalnym i otwartoźródłowy sejfie

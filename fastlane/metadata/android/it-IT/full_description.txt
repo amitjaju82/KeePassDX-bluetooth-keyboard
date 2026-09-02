@@ -1,0 +1,25 @@
+KeePassDX è un <b>gestore di password e passkey</b> open source che permette di modificare <b> dati crittografati in un unico file</b> nel formato aperto KeePass e <b> di compilare moduli in modo sicuro</b>, non richiede <b>alcuna connessione a internet</b> e integra gli standard di progettazione Android. L'app è <b>open source, senza pubblicità</b>.
+
+<b>Caratteristiche</b>
+
+- Passkey per autenticazione e conservazione locale di chiavi private.
+- Riconoscimento biometrico per uno sblocco rapido (impronta / viso / …).
+- Gestione di password una tantum (HOTP / TOTP) per l'autenticazione a due fattori (2FA).
+- Completamento automatico per le password nei moduli.
+- Magitastiera per riempire efficientemente ogni campo.
+- Creazione di database crittografati.
+- Organizzazione delle credenziali per voce e strutture ad albero.
+- Apertura e copia rapida di campi URI / URL.
+- Modelli dinamici per ogni tipo di voce.
+- Cronologia di tutte le voci.
+- Gestione precisa delle impostazioni.
+- Material design con temi.
+- Supporto per file .kdb e .kdbx (versioni dalla 1 alla 4) con algoritmi AES - Twofish - ChaCha20 - Argon2.
+- Compatibile con la maggioranza dei programmi alternativi (KeePass, KeePassXC, KeeWeb, …).
+- Codice scritto in linguaggi nativi (Kotlin / Java / JNI / C).
+
+Puoi donare o acquistare la versione pro per un servizio migliore e uno sviluppo rapido di funzionalità desiderate: <a href="https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro">https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.pro</a>
+
+Il progetto è in continua evoluzione. Non esitare a controllare lo stato dello sviluppo dei prossimi aggiornamenti: <a href="https://github.com/Kunzisoft/KeePassDX/projects">https://github.com/Kunzisoft/KeePassDX/projects</a>
+
+Segnala problemi su: <a href="https://github.com/Kunzisoft/KeePassDX/issues">https://github.com/Kunzisoft/KeePassDX/issues</a>

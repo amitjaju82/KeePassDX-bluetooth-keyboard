@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2019 Jeremy Jamet / Kunzisoft.
+     
+ This file is part of KeePassDX.
+
+  KeePassDX is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  KeePassDX is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/selectable_margin_top"
+    android:paddingHorizontal="@dimen/selectable_margin_horizontal">
+
+    <RelativeLayout
+        android:id="@+id/node_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:minHeight="@dimen/selectable_min_height"
+        style="@style/KeepassDXStyle.Selectable.Item"
+        app:layout_constraintWidth_percent="@dimen/content_percent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/node_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/image_list_margin_vertical"
+            android:layout_marginLeft="@dimen/image_list_margin_vertical"
+            android:layout_marginTop="@dimen/image_list_margin_horizontal"
+            android:layout_marginEnd="@dimen/image_list_margin_vertical"
+            android:layout_marginRight="@dimen/image_list_margin_vertical"
+            android:layout_marginBottom="@dimen/image_list_margin_horizontal"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_blank_32dp" />
+
+        <TextView
+            android:id="@+id/node_child_numbers"
+            style="@style/KeepassDXStyle.Text.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/node_icon"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            tools:text="123" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/node_image_identifier"
+            android:layout_toLeftOf="@+id/node_image_identifier"
+            android:layout_toEndOf="@+id/node_icon"
+            android:layout_toRightOf="@+id/node_icon"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/node_text"
+                style="@style/KeepassDXStyle.Title.Group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                tools:text="Node Title" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/node_tags_list_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/node_meta"
+                style="@style/KeepassDXStyle.Meta.Group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:singleLine="true"
+                tools:text="7543A7EAB2EA7CFD1394F1615EBEB08C" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/node_image_identifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/image_list_margin_vertical"
+            android:layout_marginLeft="@dimen/image_list_margin_vertical"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_arrow_right_white_24dp" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

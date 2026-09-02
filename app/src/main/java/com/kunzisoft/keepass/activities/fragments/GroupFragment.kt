@@ -1,0 +1,193 @@
+/*
+ * Copyright 2019 Jeremy Jamet / Kunzisoft.
+ *
+ * This file is part of KeePassDX.
+ *
+ *  KeePassDX is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  KeePassDX is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.kunzisoft.keepass.activities.fragments
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
+import com.kunzisoft.keepass.R
+import com.kunzisoft.keepass.adapters.NodesAdapter
+import com.kunzisoft.keepass.credentialprovider.EntrySelectionHelper.retrieveSpecialMode
+import com.kunzisoft.keepass.credentialprovider.SpecialMode
+import com.kunzisoft.keepass.database.ContextualDatabase
+import com.kunzisoft.keepass.database.element.SortNodeEnum
+import com.kunzisoft.keepass.model.SearchGroupInfo
+import com.kunzisoft.keepass.model.SortedNodeInfo
+import com.kunzisoft.keepass.viewmodels.GroupViewModel
+import kotlinx.coroutines.launch
+
+class GroupFragment : DatabaseFragment() {
+
+    private var mNodesRecyclerView: RecyclerView? = null
+    private var mLayoutManager: LinearLayoutManager? = null
+
+    private var mAdapter: NodesAdapter? = null
+
+    private val mGroupViewModel: GroupViewModel by activityViewModels()
+
+    private var specialMode: SpecialMode = SpecialMode.DEFAULT
+
+    private var mRecycleViewScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == SCROLL_STATE_IDLE) {
+                val firstPosition = mLayoutManager?.findFirstVisibleItemPosition() ?: 0
+                val firstView = mLayoutManager?.findViewByPosition(firstPosition)
+                val offset = firstView?.top ?: 0
+                mGroupViewModel.assignPosition(firstPosition, offset)
+            }
+        }
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            mGroupViewModel.scrollTo(dy)
+        }
+    }
+
+    override fun onDatabaseRetrieved(database: ContextualDatabase) {
+        context?.let { context ->
+            mAdapter = NodesAdapter(
+                context,
+                database.iconDrawableFactory,
+                SortNodeEnum.SortDatabaseParameters(
+                    recycleBinEnabled = database.isRecycleBinEnabled,
+                    recycleBinId = database.recycleBin?.nodeId
+                )
+            ).apply {
+                setOnNodeClickListener(object : NodesAdapter.NodeClickCallback {
+                    override fun onNodeClick(node: SortedNodeInfo) {
+                        mGroupViewModel.performNodeClick(node)
+                    }
+                    override fun onNodeLongClick(node: SortedNodeInfo): Boolean {
+                        mGroupViewModel.performLongNodeClick(node)
+                        return true
+                    }
+                })
+                setActionNodes(mGroupViewModel.actionsNodes.value)
+            }
+            mNodesRecyclerView?.adapter = mAdapter
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        // To apply theme
+        return inflater.inflate(R.layout.fragment_nodes, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mNodesRecyclerView = view.findViewById(R.id.nodes_list)
+
+        mLayoutManager = LinearLayoutManager(context)
+        mNodesRecyclerView?.apply {
+            scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+            layoutManager = mLayoutManager
+            adapter = mAdapter
+        }
+        resetAppTimeoutWhenViewFocusedOrChanged(view)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    mGroupViewModel.groupUIState.collect { groupUIState ->
+                        try {
+                            groupUIState.group?.let { currentGroup ->
+                                val isSearchInfo = currentGroup is SearchGroupInfo
+                                val children = groupUIState.children
+                                if (children != null) {
+                                    mAdapter?.rebuildList(
+                                        nodes = children,
+                                        isSearch = isSearchInfo
+                                    )
+                                }
+                                // Direct action node selection after rebuild
+                                mAdapter?.setActionNodes(mGroupViewModel.actionsNodes.value)
+                            }
+                        } catch (e:Exception) {
+                            Log.e(TAG, "Unable to rebuild the list", e)
+                        }
+                    }
+                }
+                launch {
+                    mGroupViewModel.viewEvent.collect { event ->
+                        when (event) {
+                            is GroupViewModel.GroupEvent.ShowPosition -> {
+                                mNodesRecyclerView?.post {
+                                    mLayoutManager?.scrollToPositionWithOffset(event.position, event.offset)
+                                }
+                            }
+                            is GroupViewModel.GroupEvent.RemoveNodeAction -> {
+                                mAdapter?.unselectActionNodes()
+                            }
+                            is GroupViewModel.GroupEvent.SortSelected -> {
+                                // Tell the main group adapter to refresh its list
+                                try {
+                                    mAdapter?.notifyChangeSort(
+                                        sortNodeEnum = event.sortNode.sortNodeEnum,
+                                        sortNodeParameters = event.sortNode.sortNodeParameters,
+                                        sortDatabaseParameters = event.sortNode.sortDatabaseParameters
+                                    )
+                                    mGroupViewModel.loadGroup()
+                                } catch (e: Exception) {
+                                    Log.e(TAG, "Unable to sort the list", e)
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+                launch {
+                    mGroupViewModel.actionsNodes.collect { actionsNodes ->
+                        mAdapter?.setActionNodes(actionsNodes)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mNodesRecyclerView?.addOnScrollListener(mRecycleViewScrollListener)
+        activity?.intent?.let {
+            specialMode = it.retrieveSpecialMode()
+        }
+    }
+
+    override fun onPause() {
+
+        mNodesRecyclerView?.removeOnScrollListener(mRecycleViewScrollListener)
+        super.onPause()
+    }
+
+    companion object {
+        private val TAG = GroupFragment::class.java.name
+    }
+}

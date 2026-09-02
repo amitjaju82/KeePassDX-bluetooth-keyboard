@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2019 Jeremy Jamet / Kunzisoft.
+
+ This file is part of KeePassDX.
+
+  KeePassDX is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  KeePassDX is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- To encapsulate elevation & status bar color -->
+    <style name="KeepassDXStyle.Light.v21" parent="KeepassDXStyle.Light.v14" >
+        <item name="preferenceTheme">@style/KeepassDXStyle.Preference.Theme</item>
+        <item name="android:statusBarColor">@color/grey_dark</item>
+        <item name="android:navigationBarColor">@color/grey_dark</item>
+    </style>
+    <style name="KeepassDXStyle.Night.v21" parent="KeepassDXStyle.Night.v14" >
+        <item name="preferenceTheme">@style/KeepassDXStyle.Preference.Theme</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="KeepassDXStyle.Toolbar.v21" parent="KeepassDXStyle.Toolbar.Base">
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Preference Theme -->
+    <style name="KeepassDXStyle.Preference.Theme" parent="@style/PreferenceThemeOverlay">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Button Style -->
+    <style name="KeepassDXStyle.v21.ImageButton" parent="KeepassDXStyle.Base.ImageButton" >
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Menu FAB -->
+    <style name="KeepassDXStyle.Fab.MenuText.v21" parent="android:style/TextAppearance">
+        <item name="android:elevation">2dp</item>
+    </style>
+</resources>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2019 Jeremy Jamet / Kunzisoft.
+
+ This file is part of KeePassDX.
+
+  KeePassDX is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  KeePassDX is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with KeePassDX.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:filterTouchesWhenObscured="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/container_add_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/container_add_group"
+        android:layout_alignEnd="@+id/container_add_group"
+        android:layout_alignRight="@+id/container_add_group"
+        android:layout_marginBottom="-12dp"
+        android:descendantFocusability="blocksDescendants"
+        android:visibility="gone">
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_add_entry"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_small_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="@dimen/image_button_margin"
+            android:layout_marginEnd="@dimen/image_button_margin"
+            app:icon="@drawable/ic_key_white_24dp"
+            android:contentDescription="@string/add_entry"
+            style="@style/KeepassDXStyle.Fab.Menu"
+            android:text="@string/add_entry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/container_add_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_button"
+        android:layout_alignEnd="@+id/add_button"
+        android:layout_alignRight="@+id/add_button"
+        android:layout_marginBottom="-12dp"
+        android:descendantFocusability="blocksDescendants"
+        android:visibility="gone">
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_add_group"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_small_size"
+            android:layout_marginRight="@dimen/image_button_margin"
+            android:layout_marginEnd="@dimen/image_button_margin"
+            app:icon="@drawable/ic_folder_white_24dp"
+            android:contentDescription="@string/add_group"
+            style="@style/KeepassDXStyle.Fab.Menu"
+            android:text="@string/add_group"/>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_button"
+        style="@style/KeepassDXStyle.Fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/content_description_add_node"
+        android:src="@drawable/ic_add_white_24dp"
+        app:useCompatPadding="true" />
+
+</RelativeLayout>
